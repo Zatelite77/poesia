@@ -1,0 +1,79 @@
+html, body, p, a, div, ul, li {
+    margin:0;
+    padding:0;
+}
+
+a {
+    color:#212529!important;
+}
+
+/* -- MURO -- */
+
+.m-p-user-img {
+    width: 45px;
+    height: 45px;
+    overflow: hidden;
+}
+
+.m-p-user-img > img {
+    width: 100%;
+}
+
+.m-p-user-name {
+    font-size:1rem;
+}
+.m-p-post-date {
+    font-size:0.75rem;
+}
+
+.post-comment-input::placeholder {
+    font-size:13px!important;
+}
+.post-comment-input {
+    font-size:13px!important;
+}
+
+.votes_quantity {
+    font-size:13px;
+}
+
+/* -- DASHBOARD --*/
+
+.dash_location {
+    font-size:13px;
+    color:darkgray;
+}
+
+.jr-btn-opened-folder {
+    background-color:#CFE1FE!important;
+}
+
+.jr-list-icon {
+    color: #3D8BFD!important;
+}
+
+.jr-list-icon:hover {
+    color: #084298!important;
+}
+
+.folder-options-menu {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    z-index: 10;
+    display: none;
+}
+
+.folder-options-menu a {
+    display: block;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: #333;
+    cursor: pointer;
+}
+
+.folder-options-menu a:hover {
+    background-color: #f0f0f0;
+}
