@@ -9,11 +9,48 @@ function conn(){
     }
 }
 
+function isMultidimensional(array $array): bool {
+    foreach ($array as $element) {
+        if (is_array($element)) {
+            return true; // Es multidimensional
+        }
+    }
+    return false; // Es simple
+}
+
+function jrMysqli($consulta, $id=null){
+    $conn = conn();
+    $stmt = $conn->prepare($consulta);
+    if($id!==null){
+        $stmt->bind_param('s', $id);
+    };
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows === 1) {
+        $rows = $result->fetch_assoc(); // Devolver una sola fila como array asociativo
+        if(count($rows)===1){
+            $row = reset($rows);
+        }else{
+            $row = $rows;
+        }
+    } else {
+        $row = $result->fetch_all(MYSQLI_ASSOC); // Devolver todas las filas como array multidimensional
+    }
+    $stmt->close();
+    $conn->close();
+    return $row;
+}
+
 function getFolderName($folderId){
     $conn = conn();
-    $consulta = mysqli_query($conn, "SELECT folder_name FROM folders WHERE id='$folderId'");
-    $result = mysqli_fetch_assoc($consulta);
-    return $result;
+    $stmt = $conn->prepare("SELECT * FROM folders WHERE id = ?");
+    $stmt->bind_param('s', $folderId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $stmt->close();
+    $conn->close();
+    return $row['folder_name'];
 }
 
 
@@ -31,7 +68,7 @@ function posts_list(){
         $result_escritos = mysqli_fetch_all($consulta_escritos);
         $folder_name = getFolderName($folderid);
         //var_dump($folder_name);
-        $location = $base_path." ".$folder_name['folder_name'];
+        $location = $base_path." ".$folder_name;
 
     }
     ?>

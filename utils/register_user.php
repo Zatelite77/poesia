@@ -1,5 +1,5 @@
 <?php
-include 'conn.php';
+include '../functions/functions.php';
 $conn = conn();
 $first_name = $_POST['first_name'];
 $last_name = $_POST['last_name'];
