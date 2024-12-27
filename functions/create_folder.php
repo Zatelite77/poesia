@@ -1,6 +1,6 @@
 <?php
 session_start();
-include '../functions/functions.php';
+include 'functions.php';
 $conn = conn();
 $user_id=$_SESSION['user_id'];
 if($_POST['name']){

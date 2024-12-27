@@ -31,7 +31,7 @@ if (!$conn) {
 }
 
 // Comprobar si hay relaciones en posts_folders
-$query_check = "SELECT COUNT(*) as total FROM posts_folders WHERE id_folder = ?";
+$query_check = "SELECT COUNT(*) as total FROM posts WHERE id_folder = ?";
 $stmt_check = mysqli_prepare($conn, $query_check);
 
 if ($stmt_check) {
@@ -43,7 +43,7 @@ if ($stmt_check) {
 
     // Si existen relaciones, eliminarlas
     if ($row['total'] > 0) {
-        $query_delete_relations = "DELETE FROM posts_folders WHERE id_folder = ?";
+        $query_delete_relations = "UPDATE FROM posts_folders WHERE id_folder = ?";
         $stmt_delete_relations = mysqli_prepare($conn, $query_delete_relations);
         if ($stmt_delete_relations) {
             mysqli_stmt_bind_param($stmt_delete_relations, 's', $folder_id);

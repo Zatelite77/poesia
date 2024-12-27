@@ -43,7 +43,7 @@ function rename_folder(folderId) {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
-                alert('Carpeta renombrada correctamente');
+                //alert('Carpeta renombrada correctamente');
                 location.reload(); // Recargar la página para reflejar los cambios
             } else {
                 alert('Error al renombrar la carpeta');
@@ -54,49 +54,121 @@ function rename_folder(folderId) {
 }
 
 function delete_folder(folderId) {
+    //Me aseguro de que el ID tenga el formato correcto
     defId = folderId.toString().padStart(10, "0");
-    // Confirmar con el usuario antes de proceder
-    var confirmation = confirm("¿Estás seguro de que deseas eliminar esta carpeta?");
-    if (!confirmation) {
-        return; // Salir si el usuario cancela
-    }
-
-    // Crear la solicitud HTTP
-    var xhr = new XMLHttpRequest();
-
-    // Configurar la solicitud como POST
-    xhr.open("POST", "functions/delete_folder.php", true);
-
-    // Establecer el encabezado Content-Type para enviar JSON
-    xhr.setRequestHeader("Content-Type", "application/json");
-
-    // Manejar la respuesta del servidor
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === XMLHttpRequest.DONE) {
-            if (xhr.status === 200) {
-                try {
-                    // Intentar analizar la respuesta como JSON
-                    var response = JSON.parse(xhr.responseText);
-
-                    if (response.success) {
-                        alert("Carpeta eliminada correctamente");
-                        location.reload(); // Recargar la página para reflejar los cambios
-                    } else {
-                        alert(response.error || "Error al eliminar la carpeta");
+    //Compruebo si la carpeta está vacía o no
+    xhrCheck = new XMLHttpRequest();
+    xhrCheck.open("POST", "functions/check_if_empty.php", true);
+    xhrCheck.setRequestHeader("Content-Type", "application/json");
+    xhrCheck.onreadystatechange = function(){
+        if(xhrCheck.readyState === XMLHttpRequest.DONE){
+            if(xhrCheck.status === 200){
+                try{
+                    var response = JSON.parse(xhrCheck.responseText);
+                    if(response.success){
+                        //Si la carpeta está vacía, preguntamos al usuario si está seguro/a de querer borrarla
+                        var confirmation = confirm("¿Estás seguro de que deseas eliminar esta carpeta?");
+                        deleteFolderRequest(defId, "delete");
+                    }else{
+                        const choice = confirm("La carpeta contiene escritos. ¿Quieres eliminarla junto con su contenido o mover los escritos al Escritorio?");
+                        if (choice) {
+                            // Confirmación adicional
+                            const deleteWithContent = confirm("¿Eliminar la carpeta y todos sus escritos?");
+                            if (deleteWithContent) {
+                                deleteFolderRequest(defId, "delete_with_content"); // Eliminar con contenido
+                            } else {
+                                deleteFolderRequest(defId, "move_to_desktop"); // Mover al Escritorio
+                            }
+                        }
                     }
                 } catch (e) {
-                    console.error("Error al analizar la respuesta del servidor:", e);
+                    console.error("Error al analizar la respuesta del servidor: ", e);
                 }
-            } else {
+            }else {
                 console.error("Error en la solicitud: " + xhr.status);
                 alert("Error al conectar con el servidor. Intenta de nuevo más tarde.");
             }
         }
-    };
+        
+        if (!confirmation) {
+            return; // Salir si el usuario cancela
+        }
+    
+        // Crear la solicitud HTTP
+        var xhr = new XMLHttpRequest();
+    
+        // Configurar la solicitud como POST
+        xhr.open("POST", "functions/delete_folder.php", true);
+    
+        // Establecer el encabezado Content-Type para enviar JSON
+        xhr.setRequestHeader("Content-Type", "application/json");
+    
+        // Manejar la respuesta del servidor
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    try {
+                        // Intentar analizar la respuesta como JSON
+                        var response = JSON.parse(xhr.responseText);
+    
+                        if (response.success) {
+                            alert("Carpeta eliminada correctamente");
+                            location.reload(); // Recargar la página para reflejar los cambios
+                        } else {
+                            alert(response.error || "Error al eliminar la carpeta");
+                        }
+                    } catch (e) {
+                        console.error("Error al analizar la respuesta del servidor:", e);
+                    }
+                } else {
+                    console.error("Error en la solicitud: " + xhr.status);
+                    alert("Error al conectar con el servidor. Intenta de nuevo más tarde.");
+                }
+            }
+        };
+    
+        // Preparar los datos para enviar
+        var data = JSON.stringify({ folder_id: defId });
+    
+        // Enviar la solicitud
+        xhr.send(data);
+
+    }
 
     // Preparar los datos para enviar
     var data = JSON.stringify({ folder_id: defId });
-
+    
     // Enviar la solicitud
-    xhr.send(data);
+    xhrCheck.send(data);
+}   
+
+function savePost(status){
+    var title = document.getElementById("title").value;
+    var content = document.getElementById("content").value;
+    var folder = document.getElementById("folders").value;
+    console.log(title+"-"+content+"-"+folder+"-"+status);
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "functions/insert_post.php", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function(){
+        if(xhr.readyState===XMLHttpRequest.DONE){
+            if(xhr.status===200){
+                try{
+                    var response = JSON.parse(xhr.responseText);
+                    if(response.success){
+                        location.href("http://localhost:8888/poesia/?loc=dash");
+                    }else{
+                        alert(response.error || "Error al guardar el escrito");
+                    }
+                }catch (e){
+                    console.error("Error al guardar el escrito:", e);
+                }
+            }else{
+                console.error("Error en la solicitud: "+xhr.status);
+                alert("Error al conectar con el servidor. Intenta de nuevo más tarde.");
+            }
+        }
+    };
+    var data = JSON.stringify({title: title, content: content, status: status, folder: folder});
+    xhr.send(data)
 }

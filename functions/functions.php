@@ -60,16 +60,16 @@ function posts_list(){
     $base_path = '<a href="?loc=dash&action=dash">Escritorio</a> <i class="bi bi-chevron-double-right"></i>';
     if(!isset($_GET['action']) || $_GET['action']=='dash'){
         $location = $base_path." Todos los escritos";
-        $consulta_escritos = mysqli_query($conn, "SELECT * FROM posts WHERE id_owner='$user_id'");
-        $result_escritos = mysqli_fetch_all($consulta_escritos);
+        //Si estamos en el escritorio, recuperamos todos los escritos
+        $consulta_escritos = jrMysqli("SELECT * FROM posts WHERE id_owner=?", $user_id);
+        // $result_escritos = mysqli_fetch_all($consulta_escritos);
     }else if($_GET['action']=="openfolder"){
+        //si estamos dentro de una carpeta, recuperamos los escritos que estan dentro de esa carpeta
         $folderid = $_GET['folderid'];
-        $consulta_escritos = mysqli_query($conn, "SELECT * FROM posts INNER JOIN posts_folders ON posts.id = posts_folders.id_post INNER JOIN folders ON posts_folders.id_folder = folders.id WHERE folders.id = '$folderid'");
-        $result_escritos = mysqli_fetch_all($consulta_escritos);
+        $consulta_escritos = jrMysqli("SELECT * FROM posts WHERE id_folder=?", $folderid);
         $folder_name = getFolderName($folderid);
         //var_dump($folder_name);
         $location = $base_path." ".$folder_name;
-
     }
     ?>
     <div class="col-lg-9 col-md-9 pt-1">
@@ -78,7 +78,7 @@ function posts_list(){
         </div>
         <div class="list-group">
             <?php
-            if($result_escritos){
+            if($consulta_escritos){
                 echo '<table class="table table-hover">
                 <thead>
                     <tr>
@@ -90,32 +90,52 @@ function posts_list(){
                     </tr>
                 </thead>
                 <tbody>';
-                foreach($result_escritos as $escrito){
-                    $consulta_carpeta = mysqli_query($conn, "SELECT * FROM posts_folders WHERE id_post='$escrito[0]'");
-                    if($consulta_carpeta){
-                        $consulta_carpeta_result = mysqli_fetch_assoc($consulta_carpeta);
-                        if($consulta_carpeta_result != null){
-                            $folder = $consulta_carpeta_result['folder_name'];
-                        }else {
+                if(isMultidimensional($consulta_escritos)===true){
+                    foreach($consulta_escritos as $escrito){
+                        if($escrito['id_folder']!=="0000000000"){
+                            $consulta_carpeta = jrMysqli("SELECT folder_name FROM folders WHERE id=?", $escrito['id_folder']);
+                            $folder = $consulta_carpeta;
+                        }else{
                             $folder = '...';
                         }
+                            $status_init=0;
+                            $status = ($escrito['status']==$status_init) ? 'Draft' : 'Published';
+                            echo    '<tr>
+                                            <td>'.$escrito['title'].'</td>
+                                            <td>'.date("d/m/Y", strtotime($escrito['date_created'])).'</td>
+                                            <td>'.$status.'</td>
+                                            <td>'.$folder.'</td>
+                                            <td>
+                                                <a href="#"><i class="bi bi-pencil me-3 jr-list-icon"></i></a>
+                                                <a href="#"><i class="bi bi-trash me-3 jr-list-icon"></i></a>
+                                            </td>
+                                        </tr>';
                     }
-                $status_init=0;
-                $status = ($escrito['6']==$status_init) ? 'Draft' : 'Published';
-                echo    '<tr>
-                                <td>'.$escrito[3].'</td>
-                                <td>'.date("d/m/Y", strtotime($escrito[5])).'</td>
-                                <td>'.$status.'</td>
-                                <td>'.$folder.'</td>
-                                <td>
-                                    <a href="#"><i class="bi bi-pencil me-3 jr-list-icon"></i></a>
-                                    <a href="#"><i class="bi bi-trash me-3 jr-list-icon"></i></a>
-                                </td>
-                            </tr>';
+                }else{
+                    if($consulta_escritos['id_folder']!=="0000000000"){
+                        $consulta_carpeta = jrMysqli("SELECT folder_name FROM folders WHERE id=?", $consulta_escritos['id_folder']);
+                        $folder = $consulta_carpeta;
+                    }else{
+                        $folder = '...';
+                    }
+                        $status_init=0;
+                        $status = ($consulta_escritos['status']==$status_init) ? 'Draft' : 'Published';
+                        echo    '<tr>
+                                        <td>'.$consulta_escritos['title'].'</td>
+                                        <td>'.date("d/m/Y", strtotime($consulta_escritos['date_created'])).'</td>
+                                        <td>'.$status.'</td>
+                                        <td>'.$folder.'</td>
+                                        <td>
+                                            <a href="#"><i class="bi bi-pencil me-3 jr-list-icon"></i></a>
+                                            <a href="#"><i class="bi bi-trash me-3 jr-list-icon"></i></a>
+                                        </td>
+                                    </tr>';
+                    }
+                }else{
+                    echo '<p>Esta carpeta está vacía.</p>';
                 }
-            }else{
-                echo '<div class="p-2">Esta carpeta está vacía</div>';
-            }
+            
+                
 ?>
                 </tbody>
             </table>            

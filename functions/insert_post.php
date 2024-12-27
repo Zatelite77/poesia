@@ -1,10 +1,11 @@
 <?php
 session_start();
-include '../functions/functions.php';
+include 'functions.php';
 $conn = conn();
-$user_id=$_SESSION['user_id'];
-$title = $_POST['name'];
+$user_id = $_SESSION['user_id'];
+$title = $_POST['title'];
 $content = $_POST['content'];
+$status = $_POST['status'];
 if($_POST['folders'] != 'null'){
     $folderid = $_POST['folders'];
 }else{

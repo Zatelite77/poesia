@@ -2,9 +2,9 @@
 $user_id = $_SESSION['user_id'];
 ?>
 <div class="col-lg-4 col-md-6 col-sm-12 pt-4">
-    <form action="utils/create_post.php" method="POST">
-        <label for="name" class="form-label">Título</label>
-        <input type="text" class="form-control mb-2" name="name">
+    <form method="POST">
+        <label for="title" class="form-label">Título</label>
+        <input type="text" class="form-control mb-2" name="title" id="title">
         <label for="content" class="form-label">Contenido</label>
         <textarea name="content" id="content" cols="30" rows="10" class="form-control mb-2"></textarea>
         <label for="folders" class="form-label">Carpeta</label>
@@ -19,6 +19,7 @@ $user_id = $_SESSION['user_id'];
                     echo '</select>';
                 }
             ?>  
-        <input type="submit" class="btn btn-primary" value="Crear Escrito">
+        <button class="btn btn-primary" onclick="savePost('0')">Guardar borrador</button>
+        <button class="btn btn-primary" onclick="savePost('1')">Publicar escrito</button>
     </form>
 </div>
