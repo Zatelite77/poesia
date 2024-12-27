@@ -151,8 +151,9 @@ function savePost(status){
         alert("Por favor, completa todos los campos requeridos.");
         return;
     }
+    //console.log(status);
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "functions/insert_post.php", true);
+    xhr.open("POST", "functions/create_post.php", true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {

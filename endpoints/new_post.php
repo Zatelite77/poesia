@@ -19,7 +19,7 @@ $user_id = $_SESSION['user_id'];
                     echo '</select>';
                 }
             ?>  
-        <button class="btn btn-primary" onclick="savePost('0')">Guardar borrador</button>
-        <button class="btn btn-primary" onclick="savePost('1')">Publicar escrito</button>
+        <button class="btn btn-primary" onclick="savePost('d')">Guardar borrador</button>
+        <button class="btn btn-primary" onclick="savePost('p')">Publicar escrito</button>
     </form>
 </div>
