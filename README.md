@@ -1,2 +1,2 @@
 # Notas
-Este es el repositorio oficial de X
+Este es el repositorio oficial de LIBELLUS
