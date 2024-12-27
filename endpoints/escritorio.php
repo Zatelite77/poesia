@@ -16,13 +16,13 @@ $user_id = $_SESSION['user_id'];
 <div class="container d-flex">
     <?php
     if(!isset($_GET['action']) || $_GET['action']=='dash' || $_GET['action']=='openfolder'){
-        include 'utils/dash.php';
+        include 'endpoints/dash.php';
     }else if($_GET['action']=="newfolder"){
-        include 'utils/new_folder.php';
+        include 'endpoints/new_folder.php';
     }else if($_GET['action']=="newpost"){
-        include 'utils/new_post.php';
+        include 'endpoints/new_post.php';
     }else if($_GET['action']=="editpost"){
-        include 'utils/edit_post.php';
+        include 'endpoints/edit_post.php';
     }
     ?>
 </div>

@@ -146,29 +146,40 @@ function savePost(status){
     var title = document.getElementById("title").value;
     var content = document.getElementById("content").value;
     var folder = document.getElementById("folders").value;
-    console.log(title+"-"+content+"-"+folder+"-"+status);
+    // Validar entradas
+    if (!title || !content || !status) {
+        alert("Por favor, completa todos los campos requeridos.");
+        return;
+    }
     var xhr = new XMLHttpRequest();
     xhr.open("POST", "functions/insert_post.php", true);
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.onreadystatechange = function(){
-        if(xhr.readyState===XMLHttpRequest.DONE){
-            if(xhr.status===200){
-                try{
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                try {
                     var response = JSON.parse(xhr.responseText);
-                    if(response.success){
-                        location.href("http://localhost:8888/poesia/?loc=dash");
-                    }else{
-                        alert(response.error || "Error al guardar el escrito");
+                    if (response.success) {
+                        window.location.href = "http://localhost:8888/poesia/?loc=dash"; // Redirección
+                    } else {
+                        alert(response.error);
                     }
-                }catch (e){
-                    console.error("Error al guardar el escrito:", e);
+                } catch (e) {
+                    console.error("Error al analizar la respuesta:", e, xhr.responseText);
                 }
-            }else{
-                console.error("Error en la solicitud: "+xhr.status);
+            } else {
+                console.error("Error en la solicitud: " + xhr.status);
                 alert("Error al conectar con el servidor. Intenta de nuevo más tarde.");
             }
         }
     };
-    var data = JSON.stringify({title: title, content: content, status: status, folder: folder});
-    xhr.send(data)
+
+    // Crear objeto JSON para enviar al servidor
+    var data = JSON.stringify({
+        title: title,
+        content: content,
+        status: status,
+        folders: folder // Cambié "folder" a "folders" para coincidir con PHP
+    });
+    xhr.send(data);
 }
