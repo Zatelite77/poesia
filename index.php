@@ -7,6 +7,7 @@ session_start();
     <?php
     include 'commons/head.php';
     ?>
+    
     <body>
         <?php
         include 'commons/header.php';
