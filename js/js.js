@@ -1,12 +1,11 @@
+
+
 function folder_options(icon, folderId) {
-    //relleno con ceros a la izquierda
-    var totalLength = 10;
-    defId = folderId.toString().padStart(10, "0");
     // Cerrar otros menús abiertos
     document.querySelectorAll('.folder-options-menu').forEach(menu => menu.style.display = 'none');
 
     // Obtener el contenedor del menú
-    const menu = document.getElementById('folder-options-'+defId);
+    const menu = document.getElementById('folder-options-'+folderId);
 
     // Mostrar el menú (si está oculto)
     if (menu.style.display === 'none') {
@@ -19,7 +18,7 @@ function folder_options(icon, folderId) {
         menu.style.display = 'block';
 
         // Cargar las opciones con AJAX
-        fetch('functions/load_folder_options.php?folder_id='+defId)
+        fetch('functions/load_folder_options.php?folder_id='+folderId)
             .then(response => response.text())
             .then(data => {
                 menu.innerHTML = data; // Insertar las opciones en el menú
@@ -31,14 +30,13 @@ function folder_options(icon, folderId) {
 }
 
 function rename_folder(folderId) {
-    //relleno con ceros a la izquierda
-    defId = folderId.toString().padStart(10, "0");
     const newName = prompt("Introduce el nuevo nombre de la carpeta:");
+    console.log(folderId);
     if (newName) {
         fetch('functions/rename_folder.php', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ folder_id: defId, new_name: newName })
+            body: JSON.stringify({ folder_id: folderId, new_name: newName })
         })
         .then(response => response.json())
         .then(data => {

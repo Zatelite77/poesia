@@ -18,11 +18,13 @@ function isMultidimensional(array $array): bool {
     return false; // Es simple
 }
 
-function jrMysqli($consulta, $id=null){
+function jrMysqli($consulta, $id1=null, $id2=null){
     $conn = conn();
     $stmt = $conn->prepare($consulta);
-    if($id!==null){
-        $stmt->bind_param('s', $id);
+    if($id1!==null && $id2!==null){
+        $stmt->bind_param('ss', $id1, $id2);
+    }else if($id1!==null && $id2==null){
+        $stmt->bind_param('s', $id1);
     };
     $stmt->execute();
     $result = $stmt->get_result();
@@ -53,6 +55,44 @@ function getFolderName($folderId){
     return $row['folder_name'];
 }
 
+function folders_list(){
+    $user_id = $_SESSION['user_id'];
+    //Listado de Carpetas
+    $consult = jrMysqli("SELECT * FROM folders WHERE id_owner=?", $user_id);
+    if(isMultidimensional($consult)===false){
+        if(!isset($_GET['action']) || $_GET['action']=='openfolder' || $_GET['action']=='dash'){
+            if(isset($_GET['folderid']) && $_GET['folderid'] == $consult['id']){
+                $icon = '<i class="bi bi-folder2-open"></i> ';
+                $color = 'jr-btn-opened-folder';
+            }else{
+                $icon = '<i class="bi bi-folder"></i> ';
+                $color = 'btn-light';
+            }
+        }
+        echo '<div class="btn '.$color.' p-2 mb-1 cyan-100 align-middle">
+                <a class="btn p-0" href="?loc=dash&action=openfolder&folderid='.$consult['id'].'">'.$icon.$consult['folder_name'].'</a>
+                <i class="ms-2 bi bi-three-dots" onclick="folder_options(this, '.$consult['id'].');"></i>
+                <div class="folder-options-menu" id="folder-options-'.$consult['id'].'" style="display: none;"></div>
+                </div><br>';
+    }else{
+        foreach($consult as $result){
+            if(!isset($_GET['action']) || $_GET['action']=='openfolder' || $_GET['action']=='dash'){
+                if(isset($_GET['folderid']) && $_GET['folderid'] == $result['id']){
+                    $icon = '<i class="bi bi-folder2-open"></i> ';
+                    $color = 'jr-btn-opened-folder';
+                }else{
+                    $icon = '<i class="bi bi-folder"></i> ';
+                    $color = 'btn-light';
+                }
+            }
+            echo '<div class="btn '.$color.' p-2 mb-1 cyan-100 align-middle">
+                    <a class="btn p-0" href="?loc=dash&action=openfolder&folderid='.$result['id'].'">'.$icon.$result['folder_name'].'</a>
+                    <i class="ms-2 bi bi-three-dots" onclick="folder_options(this, \''.$result['id'].'\');"></i>
+                    <div class="folder-options-menu" id="folder-options-'.$result['id'].'" style="display: none;"></div>
+                    </div><br>';
+        }
+    };
+}
 
 function posts_list(){
     $conn = conn();
@@ -71,13 +111,13 @@ function posts_list(){
         //var_dump($folder_name);
         $location = $base_path." ".$folder_name;
     }
-    ?>
+    echo '
     <div class="col-lg-9 col-md-9 pt-1">
         <div class="d-flex ps-2 pb-1 border-bottom">
             <p class="dash_location"><?php echo $location ?></p>
         </div>
-        <div class="list-group">
-            <?php
+        <div class="list-group">';
+
             if($consulta_escritos){
                 echo '<table class="table table-hover">
                 <thead>
@@ -106,7 +146,7 @@ function posts_list(){
                                             <td>'.$status.'</td>
                                             <td>'.$folder.'</td>
                                             <td>
-                                                <a href="#"><i class="bi bi-pencil me-3 jr-list-icon"></i></a>
+                                                <a href="?loc=dash&action=editpost&idpost='.$escrito['id'].'"><i class="bi bi-pencil me-3 jr-list-icon"></i></a>
                                                 <a href="#"><i class="bi bi-trash me-3 jr-list-icon"></i></a>
                                             </td>
                                         </tr>';
@@ -126,7 +166,7 @@ function posts_list(){
                                         <td>'.$status.'</td>
                                         <td>'.$folder.'</td>
                                         <td>
-                                            <a href="#"><i class="bi bi-pencil me-3 jr-list-icon"></i></a>
+                                            <a href="?loc=dash&action=editpost&idpost='.$escrito['id'].'"><i class="bi bi-pencil me-3 jr-list-icon"></i></a>
                                             <a href="#"><i class="bi bi-trash me-3 jr-list-icon"></i></a>
                                         </td>
                                     </tr>';
@@ -134,14 +174,79 @@ function posts_list(){
                 }else{
                     echo '<p>Esta carpeta está vacía.</p>';
                 }
-            
+                echo '
                 
-?>
+
                 </tbody>
             </table>            
         </div>
-    </div>
-<?php
+    </div>';
 }
 
+function the_wall(){
+    $conn = conn();
+    $user_id = $_SESSION['user_id'];
+    //Obtener los posts
+    $posts = jrMysqli("SELECT * FROM posts WHERE status='p'");
 
+    foreach($posts as $post){
+        $post_id = $post['id'];
+        $date = date("d M Y", strtotime($post['date_created']));
+        // Reiniciar variables
+        $votes = 0;
+        $voted = '<i class="bi bi-hand-thumbs-up me-1" style="color:gray;"></i>';
+        //Consultar votos del post
+        $consult_votes = jrMysqli("SELECT * FROM votes WHERE id_post=?", $post_id);
+        if($consult_votes){
+            $votes = $consult_votes['votes'];
+            //Consulto si el usuario ha votado
+            $consult_user_voted = jrMysqli("SELECT * FROM votes_users WHERE id_owner=? && id_post=?", $user_id, $post_id);
+            if($consult_user_voted){
+                $voted = '<i class="bi bi-hand-thumbs-up-fill me-1" style="color:green;"></i>';
+            }
+        }
+        echo '<div class="container pt-4 pb-4">
+                <div id="muro" class="muro">
+                    <div class="m-p-cont col-lg-4 col-md-6 col-sm-12 rounded bg-light p-2">
+                        <div class="m-p-header border-bottom d-flex pb-1">
+                            <div class="m-p-user-img rounded-circle me-2">
+                                <img src="img/users/jose.jpg"/>
+                            </div>
+                            <div class="m-p-meta">
+                                <p class="m-p-user-name">Jose Román</p>
+                                <p class="m-p-post-date">'.$date.'</p>
+                            </div>
+                        </div>
+                        <div class="m-p-body pt-2 pb-2">
+                            <div class="m-p-content">
+                                <p class="mb-1"><strong>'.$post['title'].'</strong></p>
+                                <p>'.$post['content'].'</p>
+                            </div>
+                        </div>
+                        <div class="m-p-comments pt-1 pb-1 border-top">
+                                <form>
+                                    <input class="form-control post-comment-input" type="text" name="comentario" placeholder="Comentar">
+                                </form>
+                            </div>
+                        <div class="m-p-footer border-top d-flex pt-1">
+                            <div class="m-p-actions-container d-flex">
+                                <div class="d-flex align-items-center me-3">
+                                    '.$voted.'
+                                    <span class="votes_quantity">'.$votes.'</span>
+                                </div>
+                                <div class="d-flex">
+                                    <i class="bi bi-bookmark-heart me-2"></i>
+                                </div> 
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>';
+    }
+}
+
+function getPostInfo($id_post){
+    $conn = conn();
+    $datos = jrMysqli("SELECT * FROM posts WHERE id=?", $id_post);
+    return $datos;
+}
