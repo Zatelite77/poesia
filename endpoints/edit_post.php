@@ -16,17 +16,28 @@ echo '
                     <option value="null"></option>';
                     if(isMultidimensional($consult)===true){
                         foreach($consult as $result){
-                            $selected = $result['id']===$datos['id_folder'] ? 'selected' : '';
-                            echo '<option value="'.$result['id'].'" '.$selected.'>'.$result['folder_name'].'</option>';
+                            $folderSelected = $result['id']===$datos['id_folder'] ? 'selected' : '';
+                            echo '<option value="'.$result['id'].'" '.$folderSelected.'>'.$result['folder_name'].'</option>';
                         }
                     }else{
-                        $selected = $consult['id']===$datos['id_folder'] ? 'selected' : '';
-                        echo '<option value="'.$consult['id'].'" '.$selected.'>'.$consult['folder_name'].'</option>';
+                        $folderSelected = $consult['id']===$datos['id_folder'] ? 'selected' : '';
+                        echo '<option value="'.$consult['id'].'" '.$folderSelected.'>'.$consult['folder_name'].'</option>';
                     }                                        
+                    echo '</select>
+                    <label for="folders" class="form-label">Estado</label>
+                    <select name="status" id="status" class="form-select mb-4">';
+                    if($consul['status']=='d'){
+                        echo '  <option value="d" selected>Borrador</option>
+                                <option value="p">Publicado</option>';
+                    }else{
+                        echo '  <option value="d">Borrador</option>
+                                <option value="p" selected>Publicado</option>';
+                    }                    
                     echo '</select>';
                 }
         echo '
-        <button class="btn btn-primary" onclick="savePost(\'d\')">Actualizar Escrito</button>
-        <button class="btn btn-danger" onclick="savePost(\'p\')">Cancelar</button>
+        <input class="visually-hidden" type="text" name="idpost" id="idpost" value="'.$id_post.'">
+        <button class="btn btn-primary" onclick="updatePost()">Actualizar Escrito</button>
+        <a href="?loc=dash&action=dash" class="btn btn-danger" style="color:white!important;">Cancelar</a>
     </form>
 </div>';

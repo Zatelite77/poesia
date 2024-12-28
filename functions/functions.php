@@ -114,7 +114,7 @@ function posts_list(){
     echo '
     <div class="col-lg-9 col-md-9 pt-1">
         <div class="d-flex ps-2 pb-1 border-bottom">
-            <p class="dash_location"><?php echo $location ?></p>
+            <p class="dash_location">'.$location.'</p>
         </div>
         <div class="list-group">';
 
@@ -166,7 +166,7 @@ function posts_list(){
                                         <td>'.$status.'</td>
                                         <td>'.$folder.'</td>
                                         <td>
-                                            <a href="?loc=dash&action=editpost&idpost='.$escrito['id'].'"><i class="bi bi-pencil me-3 jr-list-icon"></i></a>
+                                            <a href="?loc=dash&action=editpost&idpost='.$consulta_escritos['id'].'"><i class="bi bi-pencil me-3 jr-list-icon"></i></a>
                                             <a href="#"><i class="bi bi-trash me-3 jr-list-icon"></i></a>
                                         </td>
                                     </tr>';

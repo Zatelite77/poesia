@@ -182,3 +182,49 @@ function savePost(status){
     });
     xhr.send(data);
 }
+
+function updatePost(){
+    var title = document.getElementById("title").value;
+    var content = document.getElementById("content").value;
+    var folder = document.getElementById("folders").value;
+    var status = document.getElementById("status").value;
+    var idpost = document.getElementById("idpost").value;
+    // Validar entradas
+    if (!title || !content || !status || !idpost) {
+        alert("Por favor, completa todos los campos requeridos.");
+        return;
+    }
+    //console.log(status);
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "functions/update_post.php", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                try {
+                    var response = JSON.parse(xhr.responseText);
+                    if (response.success) {
+                        window.location.href = "http://localhost:8888/poesia/?loc=dash"; // Redirección
+                    } else {
+                        alert(response.error);
+                    }
+                } catch (e) {
+                    console.error("Error al analizar la respuesta:", e, xhr.responseText);
+                }
+            } else {
+                console.error("Error en la solicitud: " + xhr.status);
+                alert("Error al conectar con el servidor. Intenta de nuevo más tarde.");
+            }
+        }
+    };
+
+    // Crear objeto JSON para enviar al servidor
+    var data = JSON.stringify({
+        title: title,
+        content: content,
+        status: status,
+        folders: folder,
+        idpost: idpost
+    });
+    xhr.send(data);
+}
