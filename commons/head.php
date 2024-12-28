@@ -6,4 +6,5 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="css/styles.css">
     <script type="text/javascript" src=js/js.js></script>
+    <link rel="icon" href="commons/img/1x/favicon-100.jpg" type="image/x-icon"/>
 </head>

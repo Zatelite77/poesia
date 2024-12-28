@@ -7,7 +7,7 @@ session_start();
     <?php
     include 'commons/head.php';
     ?>
-    
+
     <body>
         <?php
         include 'commons/header.php';
@@ -20,9 +20,9 @@ session_start();
             }           
         }else{
             if(!isset($_GET['loc']) || $_GET['loc']=='login' || $_GET['loc']=='error'){
-                include 'login.php';
+                include 'endpoints/login.php';
             }else{
-                include 'register.php';
+                include 'endpoints/register.php';
             }
             
         }
