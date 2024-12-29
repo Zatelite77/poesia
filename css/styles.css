@@ -1,0 +1,10 @@
+.btn-jr-primary {
+    background-color: #0092cc!important;
+    color:white!important;
+    transition:.3s!important;
+}
+
+.btn-jr-primary:hover {
+    background-color: #33bbe5!important;
+    transition:.3s!important;
+}

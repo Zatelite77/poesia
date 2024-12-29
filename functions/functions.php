@@ -1,7 +1,7 @@
 <?php
 
 function conn(){
-    $mysqli = new mysqli("localhost", "letterwinds_jr", "HNo_BLH~AWIM", "letterwinds_productiondb");
+    $mysqli = new mysqli("localhost", "root", "root", "poesia");
     if ($mysqli->connect_errno) {
         return "Fallo al conectar a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
     }else{
