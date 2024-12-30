@@ -1,7 +1,7 @@
     <?php
     session_start();
     ?>
-    <div class="border-bottom container">
+    <div class="border-bottom container mb-4">
         <nav class="navbar navbar-expand-lg navbar-expand-md navbar-expand-sm navbar-light container d-flex justify-content-between">
           <a class="navbar-brand" href="https://letterwinds.com"><img src="commons/img/SVG/Letterwinds_logo.svg" style="width:150px;"/></a>
                 <?php
@@ -19,6 +19,5 @@
                     </div>';
                 }
                 ?>
-                </div>
         </nav>
     </div>

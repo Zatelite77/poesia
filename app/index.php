@@ -20,9 +20,9 @@ session_start();
             }           
         }else{
             if(!isset($_GET['loc']) || $_GET['loc']=='login' || $_GET['loc']=='error'){
-                include 'endpoints/login.php';
+                header ('https://letterwinds.com/app/login.php');
             }else{
-                include 'endpoints/register.php';
+                header ('https://letterwinds.com/app/register.php');
             }
             
         }
