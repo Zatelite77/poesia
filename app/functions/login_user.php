@@ -15,3 +15,4 @@ if($resultado != null){
 }else{
     header("Location: http://localhost:8888/poesia/?loc=error");
 }
+//Archivo restaurado
