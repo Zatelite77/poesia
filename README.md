@@ -1,2 +1,2 @@
-# LIBELLUS
-Este es el repositorio oficial de LIBELLUS, una plataforma para aficionados a la escritura.
+# Letterwinds
+Este es el repositorio oficial de Letterwinds, una plataforma para aficionados a la escritura en la cual pueden escribir, compartir sus escritos y participar con la comunidad interactuando con otros usuarios.
