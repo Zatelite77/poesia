@@ -11,7 +11,14 @@
  *
  * @var bool
  */
-define( 'WP_USE_THEMES', true );
+session_start();
+if(isset($_SESSION['id_user'])){
+    header ('Location: https://letterwinds.com/app/');
+}else{
+    define( 'WP_USE_THEMES', true );
 
-/** Loads the WordPress Environment and Template */
-require __DIR__ . '/wp-blog-header.php';
+    /** Loads the WordPress Environment and Template */
+    require __DIR__ . '/wp-blog-header.php';
+}
+
+

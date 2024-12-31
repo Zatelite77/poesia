@@ -31,7 +31,6 @@ function folder_options(icon, folderId) {
 
 function rename_folder(folderId) {
     const newName = prompt("Introduce el nuevo nombre de la carpeta:");
-    console.log(folderId);
     if (newName) {
         fetch('functions/rename_folder.php', {
             method: 'POST',
@@ -226,5 +225,52 @@ function updatePost(){
         folders: folder,
         idpost: idpost
     });
+    xhr.send(data);
+}
+
+function checkAll(c){
+    if(c.checked == true){
+        cs = document.getElementsByClassName('post_checkbox');
+        for(i=0;i<cs.length;i++){
+            cs[i].setAttribute("checked", "checked");
+        }
+    }else{
+        cs = document.getElementsByClassName('post_checkbox');
+        for(i=0;i<cs.length;i++){
+            cs[i].removeAttribute("checked");
+        }
+    }
+}
+
+function vote(postId){
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "functions/vote_post.php", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                try {
+                    // Intentar analizar la respuesta como JSON
+                    var response = JSON.parse(xhr.responseText);
+
+                    if (response.success) {
+                        location.reload(); // Recargar la página para reflejar los cambios
+                    } else {
+                        alert(response.error || "Error al votar");
+                    }
+                } catch (e) {
+                    console.error("Error al analizar la respuesta del servidor:", e);
+                }
+            } else {
+                console.error("Error en la solicitud: " + xhr.status);
+                alert("Error al conectar con el servidor. Intenta de nuevo más tarde.");
+            }
+        }
+    };
+
+    // Preparar los datos para enviar
+    var data = JSON.stringify({ post_id: postId });
+
+    // Enviar la solicitud
     xhr.send(data);
 }

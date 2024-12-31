@@ -12,7 +12,7 @@ session_start();
         <?php
         include 'commons/header.php';
         echo '<div class="container pt-1">';
-        if(isset($_SESSION['user_id']) && $_SESSION['user_id'] != null){
+        if(isset($_SESSION['id_user']) && $_SESSION['id_user'] != null){
             if(!isset($_GET['loc'])){
                 include 'endpoints/muro.php';
             }else if($_GET['loc']=='dash'){

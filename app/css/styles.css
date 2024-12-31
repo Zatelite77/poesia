@@ -1,10 +1,21 @@
 html, body, p, a, div, ul, li {
     margin:0;
     padding:0;
+    font-family:"noto Serif", serif;
 }
 
 a {
     color:#212529!important;
+}
+
+.jr-menu-item {
+    border-bottom: 2px solid #F8F9FA;
+    transition:.2s;
+}
+
+.jr-menu-item:hover {
+    border-bottom: 2px solid #2F92CC;
+    transition:.2s;
 }
 
 .jr-login-background {
@@ -40,28 +51,71 @@ a {
 }
 
 .m-p-user-name {
-    font-size:1rem;
+    font-size:0.9rem;
+    font-family: "Noto Sans", sans-serif!important;
 }
 .m-p-post-date {
-    font-size:0.75rem;
+    font-size:0.70rem;
+    font-family: "Noto Sans", sans-serif!important;
+}
+
+.jr-post-license-svg {
+    width:20px;
+    height:auto;
+}
+
+.m-p-post-title {
+    font-size:0.95rem;
+    font-weight:700!important;
+    margin-bottom:10px;
+}
+
+.m-p-post-content {
+    font-size:0.90rem;
+    font-weight:400!important;
 }
 
 .post-comment-input::placeholder {
     font-size:13px!important;
+    font-family: "Noto Sans", sans-serif!important;
 }
 .post-comment-input {
     font-size:13px!important;
+    font-family: "Noto Sans", sans-serif!important;
 }
 
 .votes_quantity {
     font-size:13px;
+    font-family: "Noto Sans", sans-serif!important;
 }
 
 /* -- DASHBOARD --*/
+.jr-dash-table-posts-list {
+    font-family:"Noto Sans", sans-serif!important;
+}
 
-.dash_location {
+.jr-dash-table-posts-list th{
+    font-size:1rem;
+    font-weight:500!important;
+}
+
+.jr-dash-table-posts-list td.jr-dash-posts-list-title {
+    font-size:0.95rem;
+}
+
+.jr-dash-table-posts-list td.jr-dash-posts-list-meta {
+    font-size:0.8rem;
+}
+
+.jr-dash-folders-list-folder-name {
+    font-family:"Noto Sans", sans-serif!important;
+    font-size:0.95rem;
+}
+
+.dash_location, .dash_location a {
     font-size:13px;
     color:darkgray;
+    font-family:"Noto Sans", sans-serif!important;
 }
 
 .jr-btn-opened-folder {

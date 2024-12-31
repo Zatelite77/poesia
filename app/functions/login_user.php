@@ -1,5 +1,5 @@
 <?php
-include 'functions/functions.php';
+include 'functions.php';
 $conn = conn();
 $email = $_POST['email'];
 $pass = $_POST['pass'];
@@ -10,9 +10,13 @@ $resultado = mysqli_fetch_assoc($consulta);
 if($resultado != null){
     //var_dump($resultado);
     session_start();
-    $_SESSION['user_id'] = $resultado['id'];
-    header("Location: http://localhost:8888/poesia/");
+    $_SESSION['id_user'] = $resultado['id'];
+    if(!$_SESSION['id_user'] || $_SESSION['id_user']==null){
+        echo 'No se inicializó la variable de sesión';
+    }else{
+        header("Location: https://letterwinds.com/app");
+    }
 }else{
-    header("Location: http://localhost:8888/poesia/?loc=error");
+    header("Location: https://letterwinds.com/app/?loc=error");
 }
 //Archivo restaurado

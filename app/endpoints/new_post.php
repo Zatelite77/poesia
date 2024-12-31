@@ -1,5 +1,5 @@
 <?php
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['id_user'];
 ?>
 <div class="col-lg-4 col-md-6 col-sm-12 pt-4">
     <form method="POST">

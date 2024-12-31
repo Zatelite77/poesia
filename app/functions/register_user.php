@@ -1,5 +1,5 @@
 <?php
-include '../functions/functions.php';
+include 'functions.php';
 $conn = conn();
 $first_name = $_POST['first_name'];
 $last_name = $_POST['last_name'];
@@ -12,9 +12,9 @@ $id = mysqli_insert_id($conn);
 if($consulta){
     //var_dump($resultado);
     session_start();
-    $_SESSION['user_id'] = $id;
-    header("Location: http://localhost:8888/poesia/");
+    $_SESSION['id_user'] = $id;
+    header("Location: https://letterwinds.com/app");
 }else{
-    header("Location: http://localhost:8888/poesia/?loc=error");
+    header("Location: https://letterwinds.com/app/?loc=error");
 }
 //Archivo restaurado

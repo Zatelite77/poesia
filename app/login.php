@@ -3,7 +3,9 @@
 <?php include 'commons/head.php'; ?>
     <body>
         <div class="jr-login-background"></div>
-        <?php include 'commons/header.php'; ?>
+        <div class="container p-4" style="position:relative;z-index:1!important;">
+            <a class="ms-2 mb-0 p-0" href="https://letterwinds.com"><img src="commons/img/SVG/Letterwinds_logo.svg" style="width:150px;" class="mb-1"/></a>
+        </div>
         <div class="container" style="z-index:10;position:relative;">
             <div class="jr-login-container">
                 <h1 class="mb-3 fs-4">Inicia sesión para acceder.</h1>

@@ -1,7 +1,7 @@
 <?php
 include 'functions/functions.php';
 $conn = conn();
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['id_user'];
 ?>
 <div class="container d-flex align-items-center border-bottom">
     <a href="?loc=dash&action=dash" class="me-4 fs-4 text-decoration-none">Escritorio</a>
@@ -16,13 +16,13 @@ $user_id = $_SESSION['user_id'];
 <div class="container d-flex">
     <?php
     if(!isset($_GET['action']) || $_GET['action']=='dash' || $_GET['action']=='openfolder'){
-        include 'endpoints/dash.php';
+        include 'dash.php';
     }else if($_GET['action']=="newfolder"){
-        include 'endpoints/new_folder.php';
+        include 'new_folder.php';
     }else if($_GET['action']=="newpost"){
-        include 'endpoints/new_post.php';
+        include 'new_post.php';
     }else if($_GET['action']=="editpost"){
-        include 'endpoints/edit_post.php';
+        include 'edit_post.php';
     }
     ?>
 </div>

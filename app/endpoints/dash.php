@@ -16,12 +16,17 @@
         </div>
     </div>
     </div>
-    <div class="col-lg-3 col-md-3 border-end pt-4">
-        <h5>Carpetas</h5>
         <?php
-            echo folders_list();
+        $idUser = $_SESSION['id_user'];
+        $posts = jrMysqli("SELECT * FROM posts WHERE id_owner=?", $idUser);
+        echo folders_list();
+        if($posts){
+            echo posts_list();
+        }else{
+            echo '<div class="p-4">
+                    <div class="alert alert-primary" role="alert">
+                        Aún no tienes ningún escrito!
+                    </div>
+                  </div>';
+        }
         ?>
-    </div>
-    <?php 
-    echo posts_list();
-    ?>
