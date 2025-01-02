@@ -1,4 +1,4 @@
-     <!-- Modal -->
+<!-- Modal -->
     <div class="modal fade" id="deleteFolderModal" tabindex="-1" aria-labelledby="deleteFolderModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">

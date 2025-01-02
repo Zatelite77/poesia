@@ -1,5 +1,9 @@
 <?php
 session_start();
+if(!isset($_SESSION['id_user'])){
+    header('Location: https://letterwinds.com');
+}
+include 'functions/functions.php';
 ?>
 <!DOCTYPE html>
 
@@ -9,25 +13,27 @@ session_start();
     ?>
 
     <body>
-        <?php
-        include 'commons/header.php';
-        echo '<div class="container pt-1">';
-        if(isset($_SESSION['id_user']) && $_SESSION['id_user'] != null){
-            if(!isset($_GET['loc'])){
-                include 'endpoints/muro.php';
-            }else if($_GET['loc']=='dash'){
-                include 'endpoints/escritorio.php';
-            }           
-        }else{
-            if(!isset($_GET['loc']) || $_GET['loc']=='login' || $_GET['loc']=='error'){
-                header ('https://letterwinds.com/app/login.php');
-            }else{
-                header ('https://letterwinds.com/app/register.php');
-            }
-            
-        }
-        echo '</div>';
-        include 'commons/footer.php';
-        ?>
+        <div class="container">
+            <?php include 'commons/header.php'; ?>
+            <?php
+                $route = isset($_GET['route']) ? $_GET['route'] : 'home';
+                //var_dump($route);
+                switch ($route) {
+                    case 'escritorio':
+                        include 'endpoints/escritorio.php';
+                        break;
+                    case 'perfil':
+                        include 'profile.php';
+                        break;
+                    default:
+                        echo '<div id="wall_container" class="col-lg-4 col-md-6 col-sm-12">';
+                        echo the_wall();
+                        echo '</div>
+                              <div id="reading_container" class="col-lg-8 col-md-6 col-sm-12"></div>';
+                        break;
+                }
+            ?>            
+        </div>
+        <?php include 'commons/footer.php'; ?>
     </body>
 </html>

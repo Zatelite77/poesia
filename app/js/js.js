@@ -203,7 +203,7 @@ function updatePost(){
                 try {
                     var response = JSON.parse(xhr.responseText);
                     if (response.success) {
-                        window.location.href = "http://localhost:8888/poesia/?loc=dash"; // Redirección
+                        window.location.href = 'https://letterwinds.com/app/?loc=dash&action=readpost&idpost='+idpost; // Redirección
                     } else {
                         alert(response.error);
                     }
@@ -228,16 +228,12 @@ function updatePost(){
     xhr.send(data);
 }
 
-function checkAll(c){
-    if(c.checked == true){
-        cs = document.getElementsByClassName('post_checkbox');
-        for(i=0;i<cs.length;i++){
-            cs[i].setAttribute("checked", "checked");
-        }
-    }else{
-        cs = document.getElementsByClassName('post_checkbox');
-        for(i=0;i<cs.length;i++){
-            cs[i].removeAttribute("checked");
+function check(t, c) {
+    if (t === 'all') {
+        // Obtener todos los checkboxes de la lista
+        const checkboxes = document.getElementsByClassName('post_checkbox');
+        for (let i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = c.checked; // Actualizar estado de todos según el encabezado
         }
     }
 }

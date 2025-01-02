@@ -9,6 +9,7 @@ $user_id = $_SESSION['id_user'];
         <textarea name="content" id="content" cols="30" rows="10" class="form-control mb-2"></textarea>
         <label for="folders" class="form-label">Carpeta</label>
             <?php
+            $conn = conn();
                 $consult = mysqli_query($conn, "SELECT * FROM folders WHERE id_owner='$user_id'");
                 if($consult && $results = mysqli_fetch_all($consult, MYSQLI_ASSOC)){
                     echo '<select name="folders" id="folders" class="form-select mb-4">

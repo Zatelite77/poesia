@@ -1,13 +1,13 @@
     <?php
     session_start();
     ?>
-    <div class="border-bottom container mb-4 ps-4 pe-4 pt-2 pb-2">
+    <div class="border-bottom container mb-2 ps-4 pe-4 pt-2 pb-2">
         <nav class="d-flex justify-content-between">
           <div class="d-flex" style="align-items:center!important;">
             <a class="me-5 mb-0 p-0" href="https://letterwinds.com"><img src="commons/img/SVG/Letterwinds_logo.svg" style="width:150px;" class="mb-1"/></a>
             <?php
             if(isset($_SESSION['id_user'])){
-              echo '<a class="btn btn-light me-2 jr-menu-item" href="?loc=dash"><i class="bi bi-feather"></i></a>
+              echo '<a class="btn btn-light me-2 jr-menu-item" href="/app/escritorio"><i class="bi bi-feather"></i></a>
             <a class="btn btn-light me-2 jr-menu-item" href="#"><i class="bi bi-book"></i></a>
             <form class="d-flex" role="search">
               <div class="input-group">

@@ -1,5 +1,5 @@
 <?php
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['id_user'];
 $id_post = $_GET['idpost'];
 $datos = getPostInfo($id_post);
 echo '

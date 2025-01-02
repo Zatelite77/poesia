@@ -3,7 +3,7 @@ session_start();
 include 'functions.php';
 
 $conn = conn();
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['id_user'];
 
 // Leer datos JSON desde el cuerpo de la solicitud
 $input = json_decode(file_get_contents('php://input'), true);

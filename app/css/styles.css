@@ -101,6 +101,16 @@ a {
 
 .jr-dash-table-posts-list td.jr-dash-posts-list-title {
     font-size:0.95rem;
+    font-weight:600!important;
+}
+
+.jr-dash-table-posts-list td.jr-dash-posts-list-title > a {
+    transition:.2s!important;
+}
+
+.jr-dash-table-posts-list td.jr-dash-posts-list-title > a:hover {
+    color:#2F92CC!important;
+    transition:.2s!important;
 }
 
 .jr-dash-table-posts-list td.jr-dash-posts-list-meta {
@@ -114,7 +124,7 @@ a {
 
 .dash_location, .dash_location a {
     font-size:13px;
-    color:darkgray;
+    color:#212529;
     font-family:"Noto Sans", sans-serif!important;
 }
 

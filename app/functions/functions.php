@@ -73,7 +73,7 @@ function folders_list(){
                 }
             }
             echo '<div class="btn '.$color.' p-2 mb-1 cyan-100 align-middle">
-                    <a class="btn p-0 jr-dash-folders-list-folder-name" href="?loc=dash&action=openfolder&folderid='.$consult['id'].'">'.$icon.$consult['folder_name'].'</a>
+                    <a class="btn p-0 jr-dash-folders-list-folder-name" href="action=openfolder&folderid='.$consult['id'].'">'.$icon.$consult['folder_name'].'</a>
                     <i class="ms-2 bi bi-three-dots" onclick="folder_options(this, '.$consult['id'].');"></i>
                     <div class="folder-options-menu" id="folder-options-'.$consult['id'].'" style="display: none;"></div>
                     </div><br>';
@@ -89,7 +89,7 @@ function folders_list(){
                     }
                 }
                 echo '<div class="btn '.$color.' p-2 mb-1 cyan-100 align-middle">
-                        <a class="btn p-0 jr-dash-folders-list-folder-name" href="?loc=dash&action=openfolder&folderid='.$result['id'].'">'.$icon.$result['folder_name'].'</a>
+                        <a class="btn p-0 jr-dash-folders-list-folder-name" href="?action=openfolder&folderid='.$result['id'].'">'.$icon.$result['folder_name'].'</a>
                         <i class="ms-2 bi bi-three-dots" onclick="folder_options(this, \''.$result['id'].'\');"></i>
                         <div class="folder-options-menu" id="folder-options-'.$result['id'].'" style="display: none;"></div>
                         </div><br>';
@@ -104,19 +104,19 @@ function folders_list(){
 function posts_list(){
     $conn = conn();
     $user_id = $_SESSION['id_user'];
-    $base_path = '<a href="?loc=dash&action=dash">Escritorio</a> <i class="bi bi-chevron-double-right"></i>';
+    $base_path = '<a href="?action=dash">Escritorio</a> <i class="bi bi-chevron-double-right" style="font-size:10px!important;"></i>';
     if(!isset($_GET['action']) || $_GET['action']=='dash'){
         $location = $base_path." Todos los escritos";
         //Si estamos en el escritorio, recuperamos todos los escritos
-        $consulta_escritos = jrMysqli("SELECT * FROM posts WHERE id_owner=? ORDER BY date_created DESC", $user_id);
+        $getPosts = jrMysqli("SELECT * FROM posts WHERE id_owner=? ORDER BY date_created DESC", $user_id);
         // $result_escritos = mysqli_fetch_all($consulta_escritos);
     }else if($_GET['action']=="openfolder"){
         //si estamos dentro de una carpeta, recuperamos los escritos que estan dentro de esa carpeta
         $folderid = $_GET['folderid'];
-        $consulta_escritos = jrMysqli("SELECT * FROM posts WHERE id_folder=? ORDER BY date_created DESC", $folderid);
+        $getPosts = jrMysqli("SELECT * FROM posts WHERE id_folder=? ORDER BY date_created DESC", $folderid);
         $folder_name = getFolderName($folderid);
         //var_dump($folder_name);
-        $location = $base_path." ".$folder_name;
+        $location = $base_path.' <i class="bi bi-folder"></i> '.$folder_name;
     }
     echo '
     <div class="col-lg-9 col-md-9 pt-1">
@@ -125,11 +125,11 @@ function posts_list(){
         </div>
         <div class="list-group">';
 
-            if($consulta_escritos){
+            if($getPosts){
                 echo '<table class="table table-hover jr-dash-table-posts-list">
                 <thead>
                     <tr>
-                        <th><input type="checkbox" onchange="checkAll(this)"/></th>
+                        <th><input type="checkbox" onchange="check(\'all\', this)"/></th>
                         <th>Título</th>
                         <th>Fecha</th>
                         <th>Estado</th>
@@ -138,44 +138,44 @@ function posts_list(){
                     </tr>
                 </thead>
                 <tbody>';
-                if(isMultidimensional($consulta_escritos)===true){
-                    foreach($consulta_escritos as $escrito){
-                        if($escrito['id_folder']!=="0000000000"){
-                            $consulta_carpeta = jrMysqli("SELECT folder_name FROM folders WHERE id=?", $escrito['id_folder']);
+                if(isMultidimensional($getPosts)===true){
+                    foreach($getPosts as $post){
+                        if($post['id_folder']!=="0000000000"){
+                            $consulta_carpeta = jrMysqli("SELECT folder_name FROM folders WHERE id=?", $post['id_folder']);
                             $folder = $consulta_carpeta;
                         }else{
                             $folder = '...';
                         }
                             $status_init=0;
-                            $status = ($escrito['status']==$status_init) ? 'Draft' : 'Published';
+                            $status = ($post['status']==$status_init) ? 'Draft' : 'Published';
                             echo    '<tr>
-                                            <td><input type="checkbox" class="post_checkbox" id="checkbox-'.$escrito['id'].'"></td>
-                                            <td class="jr-dash-posts-list-title">'.$escrito['title'].'</td>
-                                            <td class="jr-dash-posts-list-meta">'.date("d/m/Y", strtotime($escrito['date_created'])).'</td>
+                                            <td><input type="checkbox" class="post_checkbox" id="checkbox-'.$post['id'].'" onchange="check(\'this\', this)"></td>
+                                            <td class="jr-dash-posts-list-title"><a href="?action=readpost&idpost='.$post['id'].'" style="text-decoration:none!important;">'.$post['title'].'</a></td>
+                                            <td class="jr-dash-posts-list-meta">'.date("d/m/Y", strtotime($post['date_created'])).'</td>
                                             <td class="jr-dash-posts-list-meta">'.$status.'</td>
                                             <td class="jr-dash-posts-list-meta">'.$folder.'</td>
                                             <td>
-                                                <a href="?loc=dash&action=editpost&idpost='.$escrito['id'].'"><i class="bi bi-pencil me-3 jr-list-icon"></i></a>
-                                                <a href="#"><i class="bi bi-trash me-3 jr-list-icon"></i></a>
+                                                <a href="?action=editpost&idpost='.$post['id'].'"><i class="bi bi-pencil me-3 jr-list-icon"></i></a>
+                                                <a href="#" onclick="deletePost('.$post.')"><i class="bi bi-trash me-3 jr-list-icon"></i></a>
                                             </td>
                                         </tr>';
                     }
                 }else{
-                    if($consulta_escritos['id_folder']!=="0000000000"){
-                        $consulta_carpeta = jrMysqli("SELECT folder_name FROM folders WHERE id=?", $consulta_escritos['id_folder']);
-                        $folder = $consulta_carpeta;
+                    if($getPosts['id_folder']!=="0000000000"){
+                        $getFolder = jrMysqli("SELECT folder_name FROM folders WHERE id=?", $getPosts['id_folder']);
+                        $folder = $getFolder;
                     }else{
                         $folder = '...';
                     }
                         $status_init=0;
-                        $status = ($consulta_escritos['status']==$status_init) ? 'Draft' : 'Published';
+                        $status = ($getPosts['status']==$status_init) ? 'Draft' : 'Published';
                         echo    '<tr>
-                                        <td class="jr-dash-posts-list-title">'.$consulta_escritos['title'].'</td>
-                                        <td class="jr-dash-posts-list-meta">'.date("d/m/Y", strtotime($consulta_escritos['date_created'])).'</td>
+                                        <td class="jr-dash-posts-list-title">'.$getPosts['title'].'</td>
+                                        <td class="jr-dash-posts-list-meta">'.date("d/m/Y", strtotime($getPosts['date_created'])).'</td>
                                         <td class="jr-dash-posts-list-meta">'.$status.'</td>
                                         <td class="jr-dash-posts-list-meta">'.$folder.'</td>
                                         <td>
-                                            <a href="?loc=dash&action=editpost&idpost='.$consulta_escritos['id'].'"><i class="bi bi-pencil me-3 jr-list-icon"></i></a>
+                                            <a href="?action=editpost&idpost='.$getPosts['id'].'"><i class="bi bi-pencil me-3 jr-list-icon"></i></a>
                                             <a href="#"><i class="bi bi-trash me-3 jr-list-icon"></i></a>
                                         </td>
                                     </tr>';
@@ -218,9 +218,9 @@ function the_wall(){
                 $voted = '<i class="bi bi-hand-thumbs-up-fill me-1" style="color:green;" onclick="vote(\''.$post_id.'\')"></i>';
             }
         }
-        echo '<div class="container pt-4 pb-4">
-                <div id="muro" class="muro">
-                    <div class="m-p-cont col-lg-4 col-md-6 col-sm-12 rounded bg-light p-2">
+        echo '<div class="container pt-2 pb-2">
+                <div>
+                    <div class="m-p-cont rounded bg-light p-2">
                         <!-- Cabecera del post -->
                         <div class="m-p-header border-bottom d-flex pb-1 justify-content-between align-top">
                             <div class="d-flex">

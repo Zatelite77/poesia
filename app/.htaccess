@@ -1,0 +1,18 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /app/
+
+    # Si el archivo o directorio no existe, redirigir a index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php?route=$1 [L,QSA]
+</IfModule>
+
+# Bloquear acceso a archivos sensibles
+<FilesMatch "\.(env|sql|json|log|sh|txt)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Deshabilitar listados de directorios
+Options -Indexes
