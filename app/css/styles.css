@@ -89,6 +89,14 @@ a {
     font-family: "Noto Sans", sans-serif!important;
 }
 
+#reading_container {
+    position: sticky;
+    top: 20px; /* Distancia fija desde el header */
+    align-self: flex-start;
+}
+
+
+
 /* -- DASHBOARD --*/
 .jr-dash-table-posts-list {
     font-family:"Noto Sans", sans-serif!important;

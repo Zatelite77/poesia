@@ -270,3 +270,33 @@ function vote(postId){
     // Enviar la solicitud
     xhr.send(data);
 }
+
+function seePost(postId) {
+    // Vaciar el div antes de hacer la petición
+    const readingContainer = document.getElementById("reading_container");
+    readingContainer.innerHTML = "";
+
+    // Realizar la petición AJAX
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "functions/get_post_info.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) { // Petición completada
+            if (xhr.status === 200) {
+                // Insertar el contenido devuelto en el div
+                readingContainer.innerHTML = xhr.responseText;
+            } else {
+                // Manejar errores
+                readingContainer.innerHTML = "<p>Error al cargar el contenido. Intenta nuevamente.</p>";
+            }
+        }
+    };
+
+    xhr.send(`postid=${postId}`);
+}
+
+// Limpiar el div si la página se refresca
+window.addEventListener("beforeunload", function () {
+    document.getElementById("reading_container").innerHTML = "";
+});

@@ -240,7 +240,7 @@ function the_wall(){
                         <!-- Cuerpo del post -->
                         <div class="m-p-body pt-2 pb-2">
                             <div class="m-p-content">
-                                <p class="m-p-post-title">'.$post['title'].'</p>
+                                <p class="m-p-post-title" onclick="seePost(\''.$post['id'].'\')">'.$post['title'].'</p>
                                 <p class="m-p-post-content">'.$post['content'].'</p>
                             </div>
                         </div>
