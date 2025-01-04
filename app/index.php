@@ -29,7 +29,7 @@ include 'functions/functions.php';
                         echo '<div class="d-flex"><div id="wall_container" class="col-lg-4 col-md-6 col-sm-12">';
                         echo the_wall();
                         echo '</div>
-                              <div id="reading_container" class="col-lg-8 col-md-6 col-sm-12"></div></div>';
+                              <div id="reading_container" class="container pt-2 col-lg-8 col-md-6 col-sm-12"></div></div>';
                         break;
                 }
             ?>            

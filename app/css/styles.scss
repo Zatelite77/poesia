@@ -1,0 +1,206 @@
+@import 'vars';
+@import 'mixins';
+
+html, body, p, a, div, ul, li {
+    margin:0;
+    padding:0;
+    font-family:$fserif;
+}
+
+a {
+    color:$black!important;
+}
+
+.jr-menu-item {
+    border-bottom: 2px solid #F8F9FA;
+    transition:.2s;
+}
+
+.jr-menu-item:hover {
+    border-bottom: 2px solid $blue;
+    transition:.2s;
+}
+
+.jr-login-background {
+    background-image: url('../assets/img/homepage_hero.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position-x: 50%;
+    background-position-y: 50%;
+    min-height:100vh;
+    min-width:100%;
+    position:fixed;
+    z-index:0;
+    opacity:0.8;
+}
+
+.jr-login-container {
+    background-color: rgba(255,255,255,0.7);
+    max-width:400px;
+    padding: 20px;
+    border-radius: 7px;
+}
+
+/* -- MURO -- */
+
+.m-p-user-img {
+    width: 45px;
+    height: 45px;
+    overflow: hidden;
+}
+
+.m-p-user-img > img {
+    width: 100%;
+}
+
+.m-p-user-name {
+    font-size:0.9rem;
+    font-family: $fsans!important;
+}
+.m-p-post-date {
+    font-size:0.70rem;
+    font-family: $fsans!important;
+}
+
+.jr-post-license-svg {
+    width:20px;
+    height:auto;
+}
+
+.m-p-post-title {
+    font-size:0.95rem;
+    font-weight:700!important;
+    margin-bottom:10px;
+}
+
+.m-p-post-content {
+    font-size:0.90rem;
+    font-weight:400!important;
+}
+
+.post-comment-input::placeholder {
+    font-size:13px!important;
+    font-family: $fsans!important;
+}
+.post-comment-input {
+    font-size:13px!important;
+    font-family: $fsans!important;
+}
+
+.votes_quantity {
+    font-size:13px;
+    font-family: $fsans!important;
+}
+
+#reading_container {
+    position: sticky;
+    top: 20px; /* Distancia fija desde el header */
+    align-self: flex-start;
+}
+
+.jr-post-body:hover {
+    cursor:pointer;
+}
+
+.comments-list {
+    margin-top: 10px;
+}
+
+.comment-item {
+    margin-bottom: 10px;
+    padding: 7px;
+    background-color: $white;
+    border-radius: 5px;
+    border-radius:4px;
+}
+
+.comment-item p {
+    margin: 0;
+    font-family: $fsans;
+    font-size: 13px!important;
+    color:$dgrey;
+}
+
+.wall-post-comments-user-img-box {
+    width:34px;
+    height:34px;
+    overflow:hidden;
+    background-size: cover;
+    background-position-x: 50%;
+    background-position-y: 50%;
+}
+
+/* -- DASHBOARD --*/
+.jr-dash-table-posts-list {
+    font-family:$fsans!important;
+}
+
+.jr-dash-table-posts-list th{
+    font-size:1rem;
+    font-weight:500!important;
+}
+
+.jr-dash-table-posts-list td.jr-dash-posts-list-title {
+    font-size:0.95rem;
+    font-weight:600!important;
+}
+
+.jr-dash-table-posts-list td.jr-dash-posts-list-title > a {
+    transition:.2s!important;
+}
+
+.jr-dash-table-posts-list td.jr-dash-posts-list-title > a:hover {
+    color:#2F92CC!important;
+    transition:.2s!important;
+}
+
+.jr-dash-table-posts-list td.jr-dash-posts-list-meta {
+    font-size:0.8rem;
+}
+
+.jr-dash-folders-list-folder-name {
+    font-family:$fsans!important;
+    font-size:0.95rem;
+}
+
+.dash_location, .dash_location a {
+    font-size:13px;
+    color:$black;
+    font-family:$fsans!important;
+}
+
+.jr-btn-opened-folder {
+    background-color:$lblue!important;
+}
+
+.jr-list-icon {
+    color: $blue!important;
+}
+
+.jr-list-icon:hover {
+    color: $dblue!important;
+}
+
+.folder-options-menu {
+    position: absolute;
+    background: white;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    padding: 10px;
+    z-index: 10;
+    display: none;
+}
+
+.folder-options-menu a {
+    display: block;
+    padding: 5px 10px;
+    text-decoration: none;
+    color: $dgrey;
+    cursor: pointer;
+    font-size:14px!important;
+    font-family:$fsans!important;
+}
+
+.folder-options-menu a:hover {
+    background-color: $lgrey;
+}

@@ -11,6 +11,8 @@ if($resultado != null){
     //var_dump($resultado);
     session_start();
     $_SESSION['id_user'] = $resultado['id'];
+    $_SESSION['first_name'] = $resultado['first_name'];
+    $_SESSION['last_name'] = $resultado['last_name'];
     if(!$_SESSION['id_user'] || $_SESSION['id_user']==null){
         echo 'No se inicializó la variable de sesión';
     }else{

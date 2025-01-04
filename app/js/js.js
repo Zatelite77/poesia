@@ -300,3 +300,50 @@ function seePost(postId) {
 window.addEventListener("beforeunload", function () {
     document.getElementById("reading_container").innerHTML = "";
 });
+
+function addComment(event, postId) {
+    event.preventDefault();
+
+    const inputField = event.target.querySelector("input[name='comentario']");
+    const commentText = inputField.value.trim();
+    const commentsList = document.getElementById(`comments_${postId}`);
+
+    if (commentText === "") {
+        alert("El comentario no puede estar vacío.");
+        return;
+    }
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "functions/add_comment.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                if (response.success) {
+                    // Actualizar la lista de comentarios
+                    commentsList.innerHTML = "";
+                    response.comments.forEach(comment => {
+                        const commentItem = document.createElement("div");
+                        commentItem.classList.add("comment-item");
+                        commentItem.innerHTML = `
+                            <p><strong>${comment.user}</strong></p>
+                            <p>${comment.content}</p>
+                        `;
+                        commentsList.appendChild(commentItem);
+                    });
+
+                    // Limpiar el campo de texto
+                    inputField.value = "";
+                } else {
+                    alert(response.error || "Error al guardar el comentario.");
+                }
+            } else {
+                alert("Error al procesar la solicitud.");
+            }
+        }
+    };
+
+    xhr.send(`post_id=${postId}&comment=${encodeURIComponent(commentText)}`);
+}
