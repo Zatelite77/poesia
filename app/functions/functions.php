@@ -60,45 +60,50 @@ function folders_list(){
     //Listado de Carpetas
     $consult = jrMysqli("SELECT * FROM folders WHERE id_owner=?", $user_id);
     echo '<div class="col-lg-3 col-md-3 border-end pt-4">
-        <h5>Carpetas</h5>';
+        <h5>Carpetas</h5>
+        <div id="folders-list-container">';
     if(!empty($consult)){
         if(isMultidimensional($consult)===false){
-            if(!isset($_GET['action']) || $_GET['action']=='openfolder' || $_GET['action']=='dash'){
-                if(isset($_GET['folderid']) && $_GET['folderid'] == $consult['id']){
-                    $icon = '<i class="bi bi-folder2-open"></i> ';
-                    $color = 'jr-btn-opened-folder';
-                }else{
-                    $icon = '<i class="bi bi-folder"></i> ';
-                    $color = 'btn-light';
-                }
-            }
-            echo '<div class="btn '.$color.' p-2 mb-1 cyan-100 align-middle">
-                    <a class="btn p-0 jr-dash-folders-list-folder-name" href="action=openfolder&folderid='.$consult['id'].'">'.$icon.$consult['folder_name'].'</a>
+            // if(!isset($_GET['action']) || $_GET['action']=='openfolder' || $_GET['action']=='dash'){
+            //     if(isset($_GET['folderid']) && $_GET['folderid'] == $consult['id']){
+            //         $icon = '<i class="bi bi-folder2-open"></i> ';
+            //         $color = 'jr-btn-opened-folder';
+            //     }else{
+            //         $icon = '<i class="bi bi-folder"></i> ';
+            //         $color = 'btn-light';
+            //     }
+            // }
+            echo '<div class="btn btn-light p-2 mb-1 cyan-100 align-middle" id="folder-'.$consult['id'].'">
+                    <i class="bi bi-folder"></i>
+                    <a class="btn p-0 jr-dash-folders-list-folder-name" onclick="loadFolder(\''.$consult['id'].'\')">'.$consult['folder_name'].'</a>
                     <i class="ms-2 bi bi-three-dots" onclick="folder_options(this, '.$consult['id'].');"></i>
                     <div class="folder-options-menu" id="folder-options-'.$consult['id'].'" style="display: none;"></div>
                     </div><br>';
         }else{
             foreach($consult as $result){
-                if(!isset($_GET['action']) || $_GET['action']=='openfolder' || $_GET['action']=='dash'){
-                    if(isset($_GET['folderid']) && $_GET['folderid'] == $result['id']){
-                        $icon = '<i class="bi bi-folder2-open"></i> ';
-                        $color = 'jr-btn-opened-folder';
-                    }else{
-                        $icon = '<i class="bi bi-folder"></i> ';
-                        $color = 'btn-light';
-                    }
-                }
-                echo '<div class="btn '.$color.' p-2 mb-1 cyan-100 align-middle">
-                        <a class="btn p-0 jr-dash-folders-list-folder-name" href="?action=openfolder&folderid='.$result['id'].'">'.$icon.$result['folder_name'].'</a>
+                // if(!isset($_GET['action']) || $_GET['action']=='openfolder' || $_GET['action']=='dash'){
+                //     if(isset($_GET['folderid']) && $_GET['folderid'] == $result['id']){
+                //         $icon = '<i class="bi bi-folder2-open"></i> ';
+                //         $color = 'jr-btn-opened-folder';
+                //     }else{
+                //         $icon = '<i class="bi bi-folder"></i> ';
+                //         $color = 'btn-light';
+                //     }
+                // }
+                echo '<div class="btn btn-light p-2 mb-1 cyan-100 align-middle" id="folder-'.$result['id'].'">
+                        <i class="bi bi-folder"></i>
+                        <a class="btn p-0 jr-dash-folders-list-folder-name" onclick="loadFolder(\''.$result['id'].'\')">'.$result['folder_name'].'</a>
                         <i class="ms-2 bi bi-three-dots" onclick="folder_options(this, \''.$result['id'].'\');"></i>
                         <div class="folder-options-menu" id="folder-options-'.$result['id'].'" style="display: none;"></div>
                         </div><br>';
             }
+            //href="?action=openfolder&folderid='.$result['id'].'"
     }
     }else{
         echo '<p>Las carpetas te ayudan a mantener tus obras en orden. Crea tu primera carpeta!</p>';
         };
-    echo '</div>';
+    echo '</div>
+    </div>';
 }
 
 function posts_list(){
@@ -123,7 +128,7 @@ function posts_list(){
         <div class="d-flex ps-2 pb-1 border-bottom">
             <p class="dash_location">'.$location.'</p>
         </div>
-        <div class="list-group">';
+        <div class="list-group" id="dash_posts_container">';
 
             if($getPosts){
                 echo '<table class="table table-hover jr-dash-table-posts-list">
@@ -190,90 +195,7 @@ function posts_list(){
             </table>            
         </div>
     </div>';
-}
-
-// function the_wall(){
-//     // $tpost = getPostInfo('0000000005');
-//     // var_dump($tpost);
-//     $conn = conn();
-//     $user_id = $_SESSION['id_user'];
-//     //Obtener los posts
-//     $posts = jrMysqli("SELECT * FROM posts WHERE status='p' ORDER BY date_created DESC");
-
-//     foreach($posts as $post){
-//         //Recupero los datos del autor
-//         $autor = getAutorInfo($post['id_owner']);
-//         $post_id = $post['id'];
-//         $date = date("d M Y", strtotime($post['date_created']));
-//         $subcontent = substr($post['content'], 0, 220);
-//         // Reiniciar variables
-//         $votes = 0;
-//         $voted = '<i class="bi bi-hand-thumbs-up me-1" style="color:gray;" onclick="vote(\''.$post_id.'\')"></i>';
-//         //Consultar votos del post
-//         $consult_votes = jrMysqli("SELECT * FROM votes WHERE id_post=?", $post_id);
-//         if($consult_votes){
-//             $votes = $consult_votes['votes'];
-//             //Consulto si el usuario ha votado
-//             $consult_user_voted = jrMysqli("SELECT * FROM votes_users WHERE id_owner=? && id_post=?", $user_id, $post_id);
-//             if($consult_user_voted){
-//                 $voted = '<i class="bi bi-hand-thumbs-up-fill me-1" style="color:green;" onclick="vote(\''.$post_id.'\')"></i>';
-//             }
-//         }
-//         echo '<div class="container pt-2 pb-2">
-//                 <div>
-//                     <div class="m-p-cont rounded bg-light p-2">
-//                         <!-- Cabecera del post -->
-//                         <div class="m-p-header border-bottom d-flex pb-1 justify-content-between align-top">
-//                             <div class="d-flex">
-//                                 <div class="m-p-user-img rounded-circle me-2">
-//                                     <img src="img/users/jose.jpg"/>
-//                                 </div>
-//                                 <div class="m-p-meta">
-//                                     <p class="m-p-user-name">'.$autor['first_name'].' '.$autor['last_name'].'</p>
-//                                     <p class="m-p-post-date">'.$date.'</p>
-//                                 </div>
-//                             </div>
-//                             <div class="d-flex" style="height:24px;">
-//                                 <img class="jr-post-license-svg me-1" src="assets/img/SVG/CC_BY.svg"/>
-//                                 <img class="jr-post-license-svg" src="assets/img/SVG/CC_NC.svg"/>
-//                             </div>
-//                         </div>
-//                         <!-- Cuerpo del post -->
-//                         <div class="m-p-body pt-2 pb-2 jr-post-body" onclick="seePost(\''.$post['id'].'\')">
-//                             <div class="m-p-content">
-//                                 <p class="m-p-post-title">'.$post['title'].'</p>
-//                                 <p class="m-p-post-content">'.$subcontent.' <span>...</span></p>
-//                             </div>
-//                         </div>
-//                         <div class="m-p-footer border-top d-flex pt-1">
-//                             <div class="m-p-actions-container d-flex">
-//                                 <div class="d-flex align-items-center me-3">
-//                                     '.$voted.'
-//                                     <span class="votes_quantity">'.$votes.'</span>
-//                                 </div>
-//                                 <div class="d-flex">
-//                                     <i class="bi bi-bookmark-heart me-2"></i>
-//                                 </div> 
-//                             </div>
-//                         </div>
-//                         <div class="m-p-comments pt-1 pb-1 border-top">
-//                             <form onsubmit="addComment(event, \''.$post_id.'\')">
-//                                 <input 
-//                                     class="form-control post-comment-input" 
-//                                     type="text" 
-//                                     name="comentario" 
-//                                     placeholder="Comentar"
-//                                 >
-//                             </form>
-//                             <div class="comments-list" id="comments_'.$post_id.'">
-//                                 <!-- Aquí se cargarán los comentarios dinámicamente -->
-//                             </div>
-//                         </div>
-//                     </div>
-//                 </div>
-//             </div>';
-//     }
-// }
+} 
 
 function the_wall(){
     $conn = conn();
@@ -289,10 +211,10 @@ function the_wall(){
                       FROM comments c 
                       JOIN users u ON c.id_user = u.id 
                       WHERE c.id_post = ? 
-                      ORDER BY c.date_created DESC", $post_id);
+                      ORDER BY c.date_created DESC LIMIT 2", $post_id);
         //Reiniciar variables
         $votes = 0;
-        $voted = '<i class="bi bi-hand-thumbs-up me-1" style="color:gray;" onclick="vote(\''.$post_id.'\')"></i>';
+        $voted = '<i class="bi bi-hand-thumbs-up me-1 voted-grey" onclick="vote(\''.$post_id.'\')"></i>';
         //Consultar votos del post
         $consult_votes = jrMysqli("SELECT * FROM votes WHERE id_post=?", $post_id);
         if($consult_votes){
@@ -300,7 +222,7 @@ function the_wall(){
             //Consulto si el usuario ha votado
             $consult_user_voted = jrMysqli("SELECT * FROM votes_users WHERE id_owner=? && id_post=?", $user_id, $post_id);
             if($consult_user_voted){
-                $voted = '<i class="bi bi-hand-thumbs-up-fill me-1" style="color:green;" onclick="vote(\''.$post_id.'\')"></i>';
+                $voted = '<i class="bi bi-hand-thumbs-up-fill me-1 voted-colored" onclick="vote(\''.$post_id.'\')"></i>';
             }
         }
 
@@ -343,34 +265,36 @@ function the_wall(){
                                 <input class="form-control post-comment-input" type="text" name="comentario" placeholder="Comentar">
                             </form>
                             <div class="comments-list" id="comments_'.$post_id.'">';
-                                if (is_array($comments)) {
-                                    if (isMultidimensional($comments)) {
-                                        // Si es un array multidimensional, recorremos cada comentario
-                                        foreach ($comments as $comment) {
+                            if (is_array($comments)) {
+                                if (isMultidimensional($comments)) {
+                                    // Si es un array multidimensional, recorremos cada comentario
+                                    foreach ($comments as $comment) {
+                                        if (!empty($comment['content'])) { // Verificar si el comentario tiene contenido
                                             $userImg = "img/users/jose.jpg";
                                             echo '<div class="comment-item d-flex justify-contents-between">
-                                                    <div class="me-2 wall-post-comments-user-img-box" style="background-image: url(img/users/jose.jpg);width:35px;height:35px;background-size:cover;overflow:hidden;border-radius:18px;"></div>
+                                                    <div class="me-2 wall-post-comments-user-img-box" style="background-image: url('.$userImg.');width:35px;height:35px;background-size:cover;overflow:hidden;border-radius:18px;"></div>
                                                     <div>
                                                         <p><strong>'.$comment['first_name'].' '.$comment['last_name'].'</strong></p>
                                                         <p>'.$comment['content'].'</p>
                                                     </div>
-                                              </div>';
+                                                  </div>';
                                         }
-                                    } else {
-                                        // Si no es multidimensional, significa que hay solo un comentario
-                                        $userImg = "img/users/jose.jpg";
-                                        echo '<div class="comment-item d-flex justify-contents-between">
-                                                    <div class="me-2 wall-post-comments-user-img-box" style="background-image: url('.$userImg.')"></div>
-                                                    <div>
-                                                        <p><strong>'.$comments['first_name'].' '.$comments['last_name'].'</strong></p>
-                                                        <p>'.$comments['content'].'</p>
-                                                    </div>
-                                              </div>';
                                     }
                                 } else {
-                                    // No hay comentarios o error en la consulta
-                                    echo '<p>No hay comentarios para este post.</p>';
+                                    // Si no es multidimensional, significa que hay solo un comentario
+                                    if (!empty($comments['content'])) { // Verificar si el comentario tiene contenido
+                                        $userImg = "img/users/jose.jpg";
+                                        echo '<div class="comment-item d-flex justify-contents-between">
+                                                <div class="me-2 wall-post-comments-user-img-box" style="background-image: url('.$userImg.');width:35px;height:35px;background-size:cover;overflow:hidden;border-radius:18px;"></div>
+                                                <div>
+                                                    <p><strong>'.$comments['first_name'].' '.$comments['last_name'].'</strong></p>
+                                                    <p>'.$comments['content'].'</p>
+                                                </div>
+                                              </div>';
+                                    }
                                 }
+                            }                            
+                            
         echo '              </div>
                         </div>
                     </div>

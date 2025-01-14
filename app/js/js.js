@@ -296,6 +296,52 @@ function seePost(postId) {
     xhr.send(`postid=${postId}`);
 }
 
+function loadFolder(folderId) {
+    // Vaciar el div antes de hacer la petición
+    const postContainer = document.querySelector("#dash_posts_container");
+    const foldersContainer = document.querySelector("#folders-list-container");
+    const folder = document.querySelector(`#folder-${folderId}`);
+    let folders;
+    postContainer.innerHTML = "";
+
+    // Realizar la petición AJAX
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "functions/get_folder_content.php", true);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) { // Petición completada
+            if (xhr.status === 200) {
+                // Insertar el contenido devuelto en el div
+                postContainer.innerHTML = xhr.responseText;
+                //restablecemos el aspecto de las carpetas
+                folders = foldersContainer.children;
+                for(i=0;i<folders.length;i++){
+                    folders[i].classList.replace('jr-btn-opened-folder', 'btn-light');
+                    textNode = folders[i].firstChild;
+                    let oldIcon = textNode.nextSibling;
+                    let newIcon = document.createElement("i");
+                    newIcon.setAttribute("class", "bi bi-folder");
+                    folders[i].replaceChild(newIcon, oldIcon);
+                    i++;
+                }
+                //Actualizamos el aspecto de la carpeta clicada
+                folder.classList.replace('btn-light', 'jr-btn-opened-folder');
+                textNode = folder.firstChild;
+                    let oldIcon = textNode.nextSibling;
+                    let newIcon = document.createElement("i");
+                    newIcon.setAttribute("class", "bi bi-folder2-open");
+                    folder.replaceChild(newIcon, oldIcon);
+            } else {
+                // Manejar errores
+                postContainer.innerHTML = "<p>Error al cargar el contenido. Intenta nuevamente.</p>";
+            }
+        }
+    };
+
+    xhr.send(`folderId=${folderId}`);
+}
+
 // Limpiar el div si la página se refresca
 window.addEventListener("beforeunload", function () {
     document.getElementById("reading_container").innerHTML = "";

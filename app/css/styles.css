@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /* Colors */
 /* Fonts */
 html, body, p, a, div, ul, li {
@@ -20,26 +21,62 @@ a {
   transition: 0.2s;
 }
 
+/* Fondo */
 .jr-login-background {
   background-image: url("../assets/img/homepage_hero.jpg");
   background-repeat: no-repeat;
   background-size: cover;
-  background-position-x: 50%;
-  background-position-y: 50%;
+  background-position: center;
   min-height: 100vh;
-  min-width: 100%;
   position: fixed;
+  width: 100%;
   z-index: 0;
   opacity: 0.8;
 }
 
+/* Contenedor principal */
 .jr-login-container {
-  background-color: rgba(255, 255, 255, 0.7);
-  max-width: 400px;
+  width: 400px;
   padding: 20px;
-  border-radius: 7px;
+  margin-top: 36px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  position: relative;
 }
 
+/* Logo */
+.jr-login-logo {
+  width: 200px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+/* Centrando el formulario en móviles */
+/* Responsivo */
+@media (max-width: 768px) {
+  .container {
+    justify-content: center; /* Centrado horizontal en móviles */
+    align-items: center; /* Centrado vertical en móviles */
+  }
+  .jr-login-container {
+    width: 90% !important; /* Más ancho en móviles */
+    margin-top: 0; /* Elimina margen extra en móviles */
+  }
+  .jr-login-logo {
+    width: 90% !important; /* Ajusta el logo al ancho disponible */
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  .jr-login-container h1 {
+    font-size: 22px; /* Reduce el tamaño del título */
+  }
+  #login-form > div > input {
+    height: auto; /* Ajusta dinámicamente el alto del input */
+    padding: 10px; /* Añade padding interno */
+  }
+}
 /* -- MURO -- */
 .m-p-user-img {
   width: 45px;
@@ -135,6 +172,14 @@ a {
   background-position-y: 50%;
 }
 
+.voted-colored {
+  color: #2F92CC;
+}
+
+.voted-grey {
+  color: #f0f0f0;
+}
+
 /* -- DASHBOARD --*/
 .jr-dash-table-posts-list {
   font-family: "Noto Sans", sans-serif !important;
@@ -188,12 +233,13 @@ a {
 
 .folder-options-menu {
   position: absolute;
-  background: white;
-  border: 1px solid #ccc;
+  background: #ffffff;
+  border: 1px solid #f0f0f0;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   padding: 10px;
   z-index: 10;
   display: none;
+  text-align: left !important;
 }
 
 .folder-options-menu a {

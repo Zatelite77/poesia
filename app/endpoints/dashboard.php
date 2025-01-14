@@ -17,9 +17,9 @@
     </div>
     </div>
         <?php
+        echo folders_list();
         $idUser = $_SESSION['id_user'];
         $posts = jrMysqli("SELECT * FROM posts WHERE id_owner=?", $idUser);
-        echo folders_list();
         if($posts){
             echo posts_list();
         }else{

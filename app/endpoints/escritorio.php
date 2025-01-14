@@ -11,7 +11,7 @@ $user_id = $_SESSION['id_user'];
         </div>
     </nav>
 </div>
-<div class="container d-flex">
+<div class="container d-flex" style="min-height:75vh;">
     <?php
     if(!isset($_GET['action']) || $_GET['action']=='dash' || $_GET['action']=='openfolder'){
         include 'dashboard.php';
