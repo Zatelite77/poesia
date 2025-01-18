@@ -3,7 +3,7 @@
 function conn(){
     $mysqli = new mysqli("localhost", "letterwinds_jr", "HNo_BLH~AWIM", "letterwinds_productiondb");
     if ($mysqli->connect_errno) {
-        return "Fallo al conectar a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+        echo "Fallo al conectar a MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
     }else{
         return $mysqli;
     }
@@ -161,7 +161,7 @@ function posts_list(){
                                             <td class="jr-dash-posts-list-meta">'.$folder.'</td>
                                             <td>
                                                 <a href="?action=editpost&idpost='.$post['id'].'"><i class="bi bi-pencil me-3 jr-list-icon"></i></a>
-                                                <a href="#" onclick="deletePost('.$post.')"><i class="bi bi-trash me-3 jr-list-icon"></i></a>
+                                                <a href="#" onclick="deletePost(\''.$post['id'].'\')"><i class="bi bi-trash me-3 jr-list-icon"></i></a>
                                             </td>
                                         </tr>';
                     }
@@ -206,13 +206,20 @@ function the_wall(){
         $autor = getAutorInfo($post['id_owner']);
         $post_id = $post['id'];
         $date = date("d M Y", strtotime($post['date_created']));
-        $subcontent = substr($post['content'], 0, 220);
+        $subcontent = nl2br(htmlspecialchars(substr($post['content'], 0, 126)));
         $comments = jrMysqli("SELECT c.content, c.date_created, u.first_name, u.last_name 
                       FROM comments c 
                       JOIN users u ON c.id_user = u.id 
                       WHERE c.id_post = ? 
                       ORDER BY c.date_created DESC LIMIT 2", $post_id);
         //Reiniciar variables
+        if($comments){
+            $mostrarTodos = '<div class="comments-list-options" id="comments-list-options">
+                                        <a href="#">Mostrar todos los comentarios</a>
+                                    </div>';
+        }else{
+            $mostrarTodos = '';
+        }
         $votes = 0;
         $voted = '<i class="bi bi-hand-thumbs-up me-1 voted-grey" onclick="vote(\''.$post_id.'\')"></i>';
         //Consultar votos del post
@@ -225,8 +232,16 @@ function the_wall(){
                 $voted = '<i class="bi bi-hand-thumbs-up-fill me-1 voted-colored" onclick="vote(\''.$post_id.'\')"></i>';
             }
         }
+        //consultamos los comentarios que tiene el post
+        $comments = mysqli_query($conn, "SELECT * FROM comments WHERE id_post='$post_id'");
+        $countComments = mysqli_num_rows($comments);
+        if($countComments>0){
+            $commentsIcon = '<i class="bi bi-chat-square-dots-fill me-1 voted-colored"></i>';
+        }else{
+            $commentsIcon = '<i class="bi bi-chat-square-dots me-1"></i>';
+        };
 
-        echo '<div class="container pt-2 pb-2">
+        echo '<div class="container pt-2 pb-2 mb-3 container-post" id="container-post-'.$post_id.'">
                 <div>
                     <div class="m-p-cont rounded bg-light p-2">
                         <div class="m-p-header border-bottom d-flex pb-1 justify-content-between align-top">
@@ -254,49 +269,15 @@ function the_wall(){
                                      '.$voted.'
                                      <span class="votes_quantity">'.$votes.'</span>
                                  </div>
-                                 <div class="d-flex">
+                                 <div class="d-flex me-2">
                                      <i class="bi bi-bookmark-heart me-2"></i>
+                                 </div> 
+                                 <div class="d-flex">
+                                    '.$commentsIcon.'
+                                    <span class="votes_quantity">'.$countComments.'</span>
                                  </div> 
                              </div>
                          </div>
-                        <!-- Lista de comentarios -->
-                        <div class="m-p-comments pt-1 pb-1 border-top">
-                            <form onsubmit="addComment(event, \''.$post_id.'\')">
-                                <input class="form-control post-comment-input" type="text" name="comentario" placeholder="Comentar">
-                            </form>
-                            <div class="comments-list" id="comments_'.$post_id.'">';
-                            if (is_array($comments)) {
-                                if (isMultidimensional($comments)) {
-                                    // Si es un array multidimensional, recorremos cada comentario
-                                    foreach ($comments as $comment) {
-                                        if (!empty($comment['content'])) { // Verificar si el comentario tiene contenido
-                                            $userImg = "img/users/jose.jpg";
-                                            echo '<div class="comment-item d-flex justify-contents-between">
-                                                    <div class="me-2 wall-post-comments-user-img-box" style="background-image: url('.$userImg.');width:35px;height:35px;background-size:cover;overflow:hidden;border-radius:18px;"></div>
-                                                    <div>
-                                                        <p><strong>'.$comment['first_name'].' '.$comment['last_name'].'</strong></p>
-                                                        <p>'.$comment['content'].'</p>
-                                                    </div>
-                                                  </div>';
-                                        }
-                                    }
-                                } else {
-                                    // Si no es multidimensional, significa que hay solo un comentario
-                                    if (!empty($comments['content'])) { // Verificar si el comentario tiene contenido
-                                        $userImg = "img/users/jose.jpg";
-                                        echo '<div class="comment-item d-flex justify-contents-between">
-                                                <div class="me-2 wall-post-comments-user-img-box" style="background-image: url('.$userImg.');width:35px;height:35px;background-size:cover;overflow:hidden;border-radius:18px;"></div>
-                                                <div>
-                                                    <p><strong>'.$comments['first_name'].' '.$comments['last_name'].'</strong></p>
-                                                    <p>'.$comments['content'].'</p>
-                                                </div>
-                                              </div>';
-                                    }
-                                }
-                            }                            
-                            
-        echo '              </div>
-                        </div>
                     </div>
                 </div>
             </div>';

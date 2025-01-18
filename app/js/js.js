@@ -158,9 +158,9 @@ function savePost(status){
                 try {
                     var response = JSON.parse(xhr.responseText);
                     if (response.success) {
-                        window.location.href = "http://localhost:8888/poesia/?loc=dash"; // Redirección
+                        window.location.href = "https://letterwinds.com/app/escritorio"; // Redirección
                     } else {
-                        alert(response.error);
+                        console.log(response.error);
                     }
                 } catch (e) {
                     console.error("Error al analizar la respuesta:", e, xhr.responseText);
@@ -177,9 +177,42 @@ function savePost(status){
         title: title,
         content: content,
         status: status,
-        folders: folder // Cambié "folder" a "folders" para coincidir con PHP
+        folder: folder // Cambié "folder" a "folders" para coincidir con PHP
     });
     xhr.send(data);
+}
+
+function deletePost(id){
+    if(confirm('Seguro que quiere borrar el escrito?')){
+        //console.log(id);
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "functions/delete_post.php", true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
+                    try {
+                        var response = JSON.parse(xhr.responseText);
+                        if (response.success) {
+                            window.location.href = "https://letterwinds.com/app/escritorio"; // Redirección
+                        } else {
+                            console.log(response.error);
+                        }
+                    } catch (e) {
+                        console.error("Error al analizar la respuesta:", e, xhr.responseText);
+                    }
+                } else {
+                    console.error("Error en la solicitud: " + xhr.status);
+                    alert("Error al conectar con el servidor. Intenta de nuevo más tarde.");
+                }
+            }
+        };
+        var data = JSON.stringify({
+            postId: id
+        });
+        xhr.send(data);
+        // xhr.send(`postId=${id}`);
+    }
 }
 
 function updatePost(){
@@ -294,6 +327,26 @@ function seePost(postId) {
     };
 
     xhr.send(`postid=${postId}`);
+    let containerId = 'container-post-'+postId;
+    postContainersToHide = [];
+    postContainers = document.getElementsByClassName('container-post');
+    arrayContainers = Array.prototype.slice.call(postContainers);
+    // console.log(arrayContainers);
+    for(i=0;i<arrayContainers.length;i++){
+        arrayContainers[i].classList.remove("container-post-disabled");
+        // console.log(arrayContainers[i].id);
+        if(arrayContainers[i].id != containerId){
+            postContainersToHide.push(arrayContainers[i]);
+        }
+    }
+    console.log(postContainersToHide);
+    for(i=0;i<postContainersToHide.length;i++){
+        postContainersToHide[i].classList.add("container-post-disabled");
+    }
+    // postContainersToHide.forEach(cambiarClase());
+    // function cambiarClase(item){
+    //     item.classList.add("container-post-disabled");
+    // }
 }
 
 function loadFolder(folderId) {
@@ -342,10 +395,10 @@ function loadFolder(folderId) {
     xhr.send(`folderId=${folderId}`);
 }
 
-// Limpiar el div si la página se refresca
-window.addEventListener("beforeunload", function () {
-    document.getElementById("reading_container").innerHTML = "";
-});
+// // Limpiar el div si la página se refresca
+// window.addEventListener("beforeunload", function () {
+//     document.getElementById("reading_container").innerHTML = "";
+// });
 
 function addComment(event, postId) {
     event.preventDefault();
@@ -369,21 +422,23 @@ function addComment(event, postId) {
                 const response = JSON.parse(xhr.responseText);
                 if (response.success) {
                     // Actualizar la lista de comentarios
-                    commentsList.innerHTML = "";
-                    response.comments.forEach(comment => {
-                        const commentItem = document.createElement("div");
-                        commentItem.classList.add("comment-item");
-                        commentItem.innerHTML = `
-                            <p><strong>${comment.user}</strong></p>
-                            <p>${comment.content}</p>
-                        `;
-                        commentsList.appendChild(commentItem);
-                    });
+                    commentsList.innerHTML = response.comments;
+                    // commentsList.innerHTML = response.comments;
+                    // commentsList.innerHTML = "";
+                    // response.comments.forEach(comment => {
+                    //     const commentItem = document.createElement("div");
+                    //     commentItem.classList.add("comment-item");
+                    //     commentItem.innerHTML = `
+                    //         <p><strong>${comment.user}</strong></p>
+                    //         <p>${comment.content}</p>
+                    //     `;
+                    //     commentsList.appendChild(commentItem);
+                    // });
 
                     // Limpiar el campo de texto
                     inputField.value = "";
                 } else {
-                    alert(response.error || "Error al guardar el comentario.");
+                    alert(xhr.error || "Error al guardar el comentario.");
                 }
             } else {
                 alert("Error al procesar la solicitud.");

@@ -148,12 +148,28 @@ a {
   margin-top: 10px;
 }
 
+.comments-list-reader {
+  max-height: 400px;
+  overflow-y: scroll;
+}
+
 .comment-item {
   margin-bottom: 10px;
   padding: 7px;
   background-color: #ffffff;
   border-radius: 5px;
   border-radius: 4px;
+}
+
+.comments-list-options {
+  margin-bottom: 5px;
+}
+
+.comments-list-options > a {
+  font-size: 12px;
+  font-family: "Noto Sans", sans-serif;
+  color: #4f4f4f;
+  text-decoration: none;
 }
 
 .comment-item p {
@@ -177,7 +193,11 @@ a {
 }
 
 .voted-grey {
-  color: #f0f0f0;
+  color: #4f4f4f;
+}
+
+.container-post-disabled {
+  opacity: 0.3;
 }
 
 /* -- DASHBOARD --*/

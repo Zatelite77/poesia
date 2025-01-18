@@ -37,7 +37,8 @@ if($folderId){
                     $status_init=0;
                     $status = ($folderContent['status']==$status_init) ? 'Draft' : 'Published';
                     echo    '<tr>
-                                <td class="jr-dash-posts-list-title">'.$folderContent['title'].'</td>
+                                <td><input type="checkbox" class="post_checkbox" id="checkbox-'.$folderContent['id'].'" onchange="check(\'this\', this)"></td>
+                                <td class="jr-dash-posts-list-title"><a href="?action=readpost&idpost='.$folderContent['id'].'" style="text-decoration:none!important;">'.$folderContent['title'].'</a></td>
                                 <td class="jr-dash-posts-list-meta">'.date("d/m/Y", strtotime($folderContent['date_created'])).'</td>
                                 <td class="jr-dash-posts-list-meta">'.$status.'</td>
                                 <td class="jr-dash-posts-list-meta">'.$folderName.'</td>

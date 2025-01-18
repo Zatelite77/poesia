@@ -3,7 +3,7 @@ session_start();
 include 'functions.php';
 
 $conn = conn();
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['id_user'];
 
 // Leer datos JSON desde el cuerpo de la solicitud
 $input = json_decode(file_get_contents('php://input'), true);
@@ -17,7 +17,7 @@ if (!$input) {
 $title = isset($input['title']) ? trim($input['title']) : null;
 $content = isset($input['content']) ? trim($input['content']) : null;
 $status = isset($input['status']) ? trim($input['status']) : null;
-$folderid = isset($input['folders']) && $input['folders'] !== 'null' ? trim($input['folders']) : 0;
+$folderid = isset($input['folder']) && $input['folder'] !== 'null' ? trim($input['folder']) : 0;
 
 if (!$title || !$content || !$status) {
     echo json_encode(['success' => false, 'error' => 'Faltan datos obligatorios.']);
