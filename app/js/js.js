@@ -142,7 +142,9 @@ function delete_folder(folderId) {
 function savePost(status){
     var title = document.getElementById("title").value;
     var content = document.getElementById("content").value;
-    var folder = document.getElementById("folders").value;
+    if(document.getElementById("folders") != null){
+        var folder = document.getElementById("folders").value;
+    }
     // Validar entradas
     if (!title || !content || !status) {
         alert("Por favor, completa todos los campos requeridos.");
@@ -171,14 +173,22 @@ function savePost(status){
             }
         }
     };
-
+    if(folder){
+        var data = JSON.stringify({
+            title: title,
+            content: content,
+            status: status,
+            folder: folder // Cambié "folder" a "folders" para coincidir con PHP
+        });
+    }else{
+        var data = JSON.stringify({
+            title: title,
+            content: content,
+            status: status
+        });
+    }
     // Crear objeto JSON para enviar al servidor
-    var data = JSON.stringify({
-        title: title,
-        content: content,
-        status: status,
-        folder: folder // Cambié "folder" a "folders" para coincidir con PHP
-    });
+    
     xhr.send(data);
 }
 

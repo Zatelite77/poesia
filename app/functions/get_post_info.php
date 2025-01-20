@@ -70,12 +70,12 @@ if($postId){
                                      '.$voted.'
                                      <span class="votes_quantity">'.$votes.'</span>
                                  </div>
-                                 <div class="d-flex me-2">
-                                     <i class="bi bi-bookmark-heart me-2"></i>
-                                 </div> 
-                                 <div class="d-flex">
+                                 <div class="d-flex align-items-center me-3">
                                     '.$commentsIcon.'
                                     <span class="votes_quantity">'.$countComments.'</span>
+                                 </div> 
+                                 <div class="d-flex me-2">
+                                     <i class="bi bi-heart"></i>
                                  </div> 
                              </div>
                          </div>

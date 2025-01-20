@@ -21,6 +21,13 @@
           <div class="d-flex">
             <a class="btn btn-light me-2 jr-menu-item" href="#"><i class="bi bi-bell"></i></a>
             <a class="btn btn-light me-2 jr-menu-item" href="#"><i class="bi bi-person-circle"></i></a>
+            <form class="me-3" action="functions/cambiarUsuario.php" method="POST">
+              <select onchange="this.form.submit()" class="form-select" name="selectorUsuario">
+                <option value="0000000001">Jose Roman</option>
+                <option value="0000000008">Francisco de Quevedo</option>
+                <option value="0000000007">Lope Felix De Vega Carpio</option>
+              </select>
+            </form>
             <a class="btn btn-light jr-menu-item" href="functions/logout.php"><i class="bi bi-box-arrow-right"></i></a>
           </div>';
             }

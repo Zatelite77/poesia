@@ -195,7 +195,17 @@ function posts_list(){
             </table>            
         </div>
     </div>';
-} 
+}
+
+function listarEscritoEnWall($postId){
+    $conn = conn();
+    $post = getPostInfo($postId);
+    $autor = getAutorInfo($post['id_owner']);
+}
+
+function mostrarEscritoEnWall(){
+
+}
 
 function the_wall(){
     $conn = conn();
@@ -269,12 +279,12 @@ function the_wall(){
                                      '.$voted.'
                                      <span class="votes_quantity">'.$votes.'</span>
                                  </div>
-                                 <div class="d-flex me-2">
-                                     <i class="bi bi-bookmark-heart me-2"></i>
-                                 </div> 
-                                 <div class="d-flex">
+                                 <div class="d-flex align-items-center me-3">
                                     '.$commentsIcon.'
                                     <span class="votes_quantity">'.$countComments.'</span>
+                                 </div> 
+                                 <div class="d-flex me-2">
+                                     <i class="bi bi-heart"></i>
                                  </div> 
                              </div>
                          </div>
