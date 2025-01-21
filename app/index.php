@@ -31,7 +31,8 @@ include 'functions/functions.php';
                                     <div id="wall_container" class="col-lg-4 col-md-4 col-sm-12">';
                         echo the_wall();
                         echo '</div>
-                              <div id="reading_container" class="container pt-2 col-lg-6 col-md-5 col-sm-12"></div></div>';
+                                <div id="reading_container" class="container pt-2 col-lg-6 col-md-5 col-sm-12"></div>
+                              </div>';
                         break;
                 }
             ?>            

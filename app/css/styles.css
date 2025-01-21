@@ -104,13 +104,13 @@ a {
 }
 
 .m-p-post-title {
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   font-weight: 700 !important;
   margin-bottom: 10px;
 }
 
 .m-p-post-content {
-  font-size: 0.9rem;
+  font-size: 1.05rem;
   font-weight: 400 !important;
 }
 
@@ -138,6 +138,9 @@ a {
   position: sticky;
   top: 20px; /* Distancia fija desde el header */
   align-self: flex-start;
+  max-height: 90vh;
+  overflow: hidden;
+  overflow-y: scroll;
 }
 
 .jr-post-body:hover {
