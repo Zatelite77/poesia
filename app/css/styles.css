@@ -4,7 +4,7 @@
 html, body, p, a, div, ul, li {
   margin: 0;
   padding: 0;
-  font-family: "Noto Serif", serif;
+  font-family: "EB Garamond", serif;
 }
 
 a {
@@ -274,4 +274,11 @@ a {
 
 .folder-options-menu a:hover {
   background-color: #f0f0f0;
+}
+
+/* --- PERFIL DE USUARIO ----- */
+.jr-user-profile-img img {
+  width: 140px;
+  height: 140px;
+  border-radius: 70px;
 }/*# sourceMappingURL=styles.css.map */

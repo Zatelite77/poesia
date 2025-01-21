@@ -20,12 +20,29 @@
           </div>
           <div class="d-flex">
             <a class="btn btn-light me-2 jr-menu-item" href="#"><i class="bi bi-bell"></i></a>
-            <a class="btn btn-light me-2 jr-menu-item" href="#"><i class="bi bi-person-circle"></i></a>
+            <a class="btn btn-light me-2 jr-menu-item" href="#" id="userProfileButton"><i class="bi bi-person-circle"></i></a>
             <form class="me-3" action="functions/cambiarUsuario.php" method="POST">
-              <select onchange="this.form.submit()" class="form-select" name="selectorUsuario">
-                <option value="0000000001">Jose Roman</option>
-                <option value="0000000008">Francisco de Quevedo</option>
-                <option value="0000000007">Lope Felix De Vega Carpio</option>
+              <select onchange="this.form.submit()" class="form-select" name="selectorUsuario">';
+              $user = $_SESSION['id_user'];
+              switch($user){
+                case '0000000001':
+                echo '<option value="0000000001" selected>Jose Roman</option>
+                      <option value="0000000008">Francisco de Quevedo</option>
+                      <option value="0000000007">Lope Felix De Vega Carpio</option>';
+                      break;
+                case '0000000008':
+                echo '<option value="0000000001">Jose Roman</option>
+                      <option value="0000000008" selected>Francisco de Quevedo</option>
+                      <option value="0000000007">Lope Felix De Vega Carpio</option>';
+                      break;
+                case '0000000007':
+                echo '<option value="0000000001">Jose Roman</option>
+                      <option value="0000000008">Francisco de Quevedo</option>
+                      <option value="0000000007" selected>Lope Felix De Vega Carpio</option>';
+                      break;
+              }           
+              echo '
+                
               </select>
             </form>
             <a class="btn btn-light jr-menu-item" href="functions/logout.php"><i class="bi bi-box-arrow-right"></i></a>

@@ -8,17 +8,17 @@ $userId = $_SESSION['id_user'];
 
 if ($postId && $comment) {
     $conn = conn();
-    $stmt = $conn->prepare("INSERT INTO comments (id_post, id_user, content, date_created) VALUES (?, ?, ?, NOW())");
+    $stmt = $conn->prepare("INSERT INTO comments (id_post, id_owner, content, date_created) VALUES (?, ?, ?, NOW())");
     $stmt->bind_param("sss", $postId, $userId, $comment);
 
     if ($stmt->execute()) {
         $response = '';
         // Obtener todos los comentarios actualizados
-        $comments = jrMysqli("SELECT c.content, c.date_created, u.first_name, u.last_name 
+        $comments = jrMysqli("SELECT c.content, c.date_created, c.id_owner, u.first_name, u.last_name 
                               FROM comments c 
-                              JOIN users u ON c.id_user = u.id 
+                              JOIN users u ON c.id_owner = u.id 
                               WHERE c.id_post = ? 
-                              ORDER BY c.date_created DESC LIMIT 2", $postId);
+                              ORDER BY c.date_created DESC", $postId);
         if($comments){
             $mostrarTodos = '<div class="comments-list-options" id="comments-list-options">
                                         <a href="#">Mostrar todos los comentarios</a>
@@ -33,7 +33,7 @@ if ($postId && $comment) {
                 // Si es un array multidimensional, recorremos cada comentario
                 foreach ($comments as $comment) {
                     if (!empty($comment['content'])) { // Verificar si el comentario tiene contenido
-                        $userImg = "img/users/jose.jpg";
+                        $userImg = jrMysqli("SELECT meta_content FROM users_meta WHERE meta_type='1' && id_owner=?", $comment['id_owner']);
                         $response .= '<div class="comment-item d-flex justify-contents-between">
                                 <div class="me-2 wall-post-comments-user-img-box" style="background-image: url('.$userImg.');width:35px;height:35px;background-size:cover;overflow:hidden;border-radius:18px;"></div>
                                 <div>
@@ -46,7 +46,7 @@ if ($postId && $comment) {
             } else {
                 // Si no es multidimensional, significa que hay solo un comentario
                 if (!empty($comments['content'])) { // Verificar si el comentario tiene contenido
-                    $userImg = "img/users/jose.jpg";
+                    $userImg = jrMysqli("SELECT meta_content FROM users_meta WHERE meta_type='1' && id_owner=?", $comments['id_owner']);
                     $response .= $mostrarTodos;
                     $response .= '<div class="comment-item d-flex justify-contents-between">
                             <div class="me-2 wall-post-comments-user-img-box" style="background-image: url('.$userImg.');width:35px;height:35px;background-size:cover;overflow:hidden;border-radius:18px;"></div>

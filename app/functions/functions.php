@@ -213,16 +213,11 @@ function the_wall(){
     $posts = jrMysqli("SELECT * FROM posts WHERE status='p' ORDER BY date_created DESC");
 
     foreach($posts as $post){
+        $postId = $post['id'];
+        $post = getPostInfo($postId);
         $autor = getAutorInfo($post['id_owner']);
-        $post_id = $post['id'];
         $date = date("d M Y", strtotime($post['date_created']));
         $subcontent = nl2br(htmlspecialchars(substr($post['content'], 0, 126)));
-        $comments = jrMysqli("SELECT c.content, c.date_created, u.first_name, u.last_name 
-                      FROM comments c 
-                      JOIN users u ON c.id_user = u.id 
-                      WHERE c.id_post = ? 
-                      ORDER BY c.date_created DESC LIMIT 2", $post_id);
-        //Reiniciar variables
         if($comments){
             $mostrarTodos = '<div class="comments-list-options" id="comments-list-options">
                                         <a href="#">Mostrar todos los comentarios</a>
@@ -231,43 +226,47 @@ function the_wall(){
             $mostrarTodos = '';
         }
         $votes = 0;
-        $voted = '<i class="bi bi-hand-thumbs-up me-1 voted-grey" onclick="vote(\''.$post_id.'\')"></i>';
+        $voted = '<i class="bi bi-hand-thumbs-up me-1 voted-grey" onclick="vote(\''.$postId.'\')"></i>';
         //Consultar votos del post
-        $consult_votes = jrMysqli("SELECT * FROM votes WHERE id_post=?", $post_id);
+        $consult_votes = jrMysqli("SELECT * FROM votes WHERE id_post=?", $postId);
         if($consult_votes){
             $votes = $consult_votes['votes'];
             //Consulto si el usuario ha votado
-            $consult_user_voted = jrMysqli("SELECT * FROM votes_users WHERE id_owner=? && id_post=?", $user_id, $post_id);
+            $consult_user_voted = jrMysqli("SELECT * FROM votes_users WHERE id_owner=? && id_post=?", $user_id, $postId);
             if($consult_user_voted){
-                $voted = '<i class="bi bi-hand-thumbs-up-fill me-1 voted-colored" onclick="vote(\''.$post_id.'\')"></i>';
+                $voted = '<i class="bi bi-hand-thumbs-up-fill me-1 voted-colored" onclick="vote(\''.$postId.'\')"></i>';
             }
         }
-        //consultamos los comentarios que tiene el post
-        $comments = mysqli_query($conn, "SELECT * FROM comments WHERE id_post='$post_id'");
-        $countComments = mysqli_num_rows($comments);
+        $numComments = mysqli_query($conn, "SELECT * FROM comments WHERE id_post='$postId'");
+        $countComments = mysqli_num_rows($numComments);
         if($countComments>0){
             $commentsIcon = '<i class="bi bi-chat-square-dots-fill me-1 voted-colored"></i>';
         }else{
             $commentsIcon = '<i class="bi bi-chat-square-dots me-1"></i>';
         };
 
-        echo '<div class="container pt-2 pb-2 mb-3 container-post" id="container-post-'.$post_id.'">
+        echo '<div class="container pt-2 pb-2 mb-3 container-post" id="container-post-'.$postId.'">
                 <div>
                     <div class="m-p-cont rounded bg-light p-2">
                         <div class="m-p-header border-bottom d-flex pb-1 justify-content-between align-top">
                             <!-- Cabecera del post -->
-                            <div class="d-flex">
-                                <div class="m-p-user-img rounded-circle me-2">
-                                    <img src="img/users/jose.jpg"/>
+                            <div class="d-flex justify-content-between" style="width:100%;">
+                                <div class="d-flex">    
+                                    <div class="m-p-user-img rounded-circle me-2">
+                                        <img src="'.$autor['meta_content'].'"/>
+                                    </div>
+                                    <div class="m-p-meta">
+                                        <p class="m-p-user-name">'.$autor['first_name'].' '.$autor['last_name'].'</p>
+                                        <p class="m-p-post-date">'.$date.'</p>
+                                    </div>
                                 </div>
-                                <div class="m-p-meta">
-                                    <p class="m-p-user-name">'.$autor['first_name'].' '.$autor['last_name'].'</p>
-                                    <p class="m-p-post-date">'.$date.'</p>
+                                <div>
+                                    <img src="assets/img/SVG/CC_BY.svg" style="width:20px;"/>
                                 </div>
                             </div>
                         </div>
                         <!-- Cuerpo del post -->
-                        <div class="m-p-body pt-2 pb-2 jr-post-body" onclick="seePost(\''.$post['id'].'\')">
+                        <div class="m-p-body pt-2 pb-2 jr-post-body" onclick="seePost(\''.$postId.'\')">
                             <div class="m-p-content">
                                 <p class="m-p-post-title">'.$post['title'].'</p>
                                 <p class="m-p-post-content">'.$subcontent.' <span>...</span></p>
@@ -294,21 +293,35 @@ function the_wall(){
     }
 }
 
-
 function getPostInfo($id_post){
     $conn = conn();
     $datos = jrMysqli("SELECT * FROM posts WHERE id=?", $id_post);
     return $datos;
 }
 
-function getAutorInfo($id){
-    $conn = conn();
-    $datos = jrMysqli("SELECT * FROM users WHERE id=?", $id);
-    return $datos;
-}
+
 
 function getPostVotes($postId){
     $conn = conn();
     $datos = jrMysqli("SELECT * FROM votes WHERE id_post=?", $postId);
+    return $datos;
+}
+
+function getCommentsForPost($postId){
+    $conn = conn();
+    $datos = jrMysqli("  SELECT c.id_owner, c.content, u.first_name, u.last_name, i.meta_content 
+                        FROM comments c 
+                        JOIN users u ON c.id_owner = u.id 
+                        JOIN users_meta i ON u.id = i.id_owner
+                        WHERE c.id_post = ? 
+                        ORDER BY c.date_created DESC", $postId);
+    $num = count($datos);
+    array_unshift($datos,$num);
+    return $datos;
+}
+
+function getAutorInfo($id){
+    $conn = conn();
+    $datos = jrMysqli("SELECT u.first_name, u.last_name, i.meta_content FROM users u JOIN users_meta i ON i.id_owner=u.id WHERE u.id=?", $id);
     return $datos;
 }

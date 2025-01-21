@@ -4,7 +4,7 @@
 html, body, p, a, div, ul, li {
     margin:0;
     padding:0;
-    font-family:$fserif;
+    font-family:$garamond;
 }
 
 a {
@@ -279,4 +279,13 @@ a {
 
 .folder-options-menu a:hover {
     background-color: $lgrey;
+}
+
+/* --- PERFIL DE USUARIO ----- */
+
+
+.jr-user-profile-img img{
+    width:140px;
+    height:140px;
+    border-radius:70px;
 }

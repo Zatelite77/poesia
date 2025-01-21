@@ -458,3 +458,24 @@ function addComment(event, postId) {
 
     xhr.send(`post_id=${postId}&comment=${encodeURIComponent(commentText)}`);
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    let userProfileBtn = document.getElementById("userProfileButton");
+    userProfileBtn.addEventListener("click", () => {
+        let mainContainer = document.getElementById("jr-main-app-container");
+        // mainContainer.innerHTML = "<p>Perfil de Usuario</p>";
+        // console.log("Perfil de usuario activado");
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "functions/load_user_profile.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    // Insertar el contenido devuelto en el div
+                    mainContainer.innerHTML = xhr.responseText;
+                }
+            }
+        };
+        xhr.send();
+    });
+});
