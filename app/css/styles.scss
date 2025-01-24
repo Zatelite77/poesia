@@ -90,6 +90,36 @@ a {
 
 /* -- MURO -- */
 
+#appListadoPerfilesBox {
+    min-height: 300px;
+    height:300px;
+    padding:5px;
+    border-radius: 4px;
+    top:20px;
+}
+
+.jr-app-list-users-user-box {
+    display:flex;
+    margin-top:5px;
+    margin-bottom:5px;
+    padding: 2px 5px;
+    align-items: center;
+    background-color: $lgrey;
+    border-radius: 4px;
+}
+
+.jr-app-list-users-user-box-img {
+    width:45px;
+    border-radius: 25px;
+    overflow: hidden;
+    margin-right:7px;
+}
+
+.jr-app-list-users-user-box-name {
+    font-family: $fsans;
+    font-size:14px;
+}
+
 .m-p-user-img {
     width: 45px;
     height: 45px;
@@ -207,6 +237,14 @@ a {
 .container-post-disabled {
     opacity:0.3;
 }
+
+.container-post > div {
+    background-color: $lgrey;
+}
+
+
+
+
 
 /* -- DASHBOARD --*/
 .jr-dash-table-posts-list {

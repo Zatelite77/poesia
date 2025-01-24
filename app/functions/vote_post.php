@@ -17,7 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $votes = getPostVotes($post_id);
-
     $stmt = $conn->prepare("SELECT * FROM votes_users WHERE id_owner = ? AND id_post = ?");
     $stmt->bind_param("ss", $id_user, $post_id);
     $stmt->execute();

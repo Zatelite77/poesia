@@ -27,7 +27,22 @@ include 'functions/functions.php';
                         break;
                     default:
                         echo '<div class="d-flex jr-main-app-container" id="jr-main-app-container">
-                                    <div class="col-lg-2 col-md-3 sticky-top border" style="min-height:300px;height:300px;top:20px;"></div>
+                                    <div class="col-lg-2 col-md-3 sticky-top" id="appListadoPerfilesBox">
+                                        ';
+                        $listUsers = jrMysqli("SELECT * FROM users");
+                        foreach($listUsers as $user){
+                            $userData = getAutorInfo($user['id']);
+                            if($userData['meta_content']===''){
+                                $autorImg = 'img/users/01_placeholder_user.png';
+                            }else{
+                                $autorImg = $userData['meta_content'];
+                            }
+                            echo '  <div class="jr-app-list-users-user-box p-1">
+                                        <img src="'.$autorImg.'" class="jr-app-list-users-user-box-img"/>
+                                        <span class="jr-app-list-users-user-box-name">'.$userData['first_name'].' '.$userData['last_name'].'</span>
+                                    </div>';
+                        }
+                        echo '      </div>
                                     <div id="wall_container" class="col-lg-4 col-md-4 col-sm-12">';
                         echo the_wall();
                         echo '</div>

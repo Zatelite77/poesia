@@ -78,6 +78,36 @@ a {
   }
 }
 /* -- MURO -- */
+#appListadoPerfilesBox {
+  min-height: 300px;
+  height: 300px;
+  padding: 5px;
+  border-radius: 4px;
+  top: 20px;
+}
+
+.jr-app-list-users-user-box {
+  display: flex;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  padding: 2px 5px;
+  align-items: center;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.jr-app-list-users-user-box-img {
+  width: 45px;
+  border-radius: 25px;
+  overflow: hidden;
+  margin-right: 7px;
+}
+
+.jr-app-list-users-user-box-name {
+  font-family: "Noto Sans", sans-serif;
+  font-size: 14px;
+}
+
 .m-p-user-img {
   width: 45px;
   height: 45px;
@@ -203,6 +233,10 @@ a {
   opacity: 0.3;
 }
 
+.container-post > div {
+  background-color: #f5f5f5;
+}
+
 /* -- DASHBOARD --*/
 .jr-dash-table-posts-list {
   font-family: "Noto Sans", sans-serif !important;
@@ -257,7 +291,7 @@ a {
 .folder-options-menu {
   position: absolute;
   background: #ffffff;
-  border: 1px solid #f0f0f0;
+  border: 1px solid #f5f5f5;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
   padding: 10px;
   z-index: 10;
@@ -276,7 +310,7 @@ a {
 }
 
 .folder-options-menu a:hover {
-  background-color: #f0f0f0;
+  background-color: #f5f5f5;
 }
 
 /* --- PERFIL DE USUARIO ----- */

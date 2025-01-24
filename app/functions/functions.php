@@ -237,23 +237,27 @@ function the_wall(){
                 $voted = '<i class="bi bi-hand-thumbs-up-fill me-1 voted-colored" onclick="vote(\''.$postId.'\')"></i>';
             }
         }
-        $numComments = mysqli_query($conn, "SELECT * FROM comments WHERE id_post='$postId'");
-        $countComments = mysqli_num_rows($numComments);
-        if($countComments>0){
+        // $numComments = mysqli_query($conn, "SELECT * FROM comments WHERE id_post='$postId'");
+        // $countComments = mysqli_num_rows($numComments);
+        $comments = getCommentsForPost($postId);
+        if($comments[0]>0){
             $commentsIcon = '<i class="bi bi-chat-square-dots-fill me-1 voted-colored"></i>';
         }else{
             $commentsIcon = '<i class="bi bi-chat-square-dots me-1"></i>';
         };
-
+        if($autor['meta_content']===''){
+            $autorImg = 'img/users/01_placeholder_user.png';
+        }else{
+            $autorImg = $autor['meta_content'];
+        }
         echo '<div class="container pt-2 pb-2 mb-3 container-post" id="container-post-'.$postId.'">
-                <div>
                     <div class="m-p-cont rounded bg-light p-2">
                         <div class="m-p-header border-bottom d-flex pb-1 justify-content-between align-top">
                             <!-- Cabecera del post -->
                             <div class="d-flex justify-content-between" style="width:100%;">
                                 <div class="d-flex">    
                                     <div class="m-p-user-img rounded-circle me-2">
-                                        <img src="'.$autor['meta_content'].'"/>
+                                        <img src="'.$autorImg.'"/>
                                     </div>
                                     <div class="m-p-meta">
                                         <p class="m-p-user-name">'.$autor['first_name'].' '.$autor['last_name'].'</p>
@@ -280,15 +284,14 @@ function the_wall(){
                                  </div>
                                  <div class="d-flex align-items-center me-3">
                                     '.$commentsIcon.'
-                                    <span class="votes_quantity">'.$countComments.'</span>
+                                    <span class="votes_quantity">'.$comments[0].'</span>
                                  </div> 
                                  <div class="d-flex me-2">
-                                     <i class="bi bi-heart"></i>
+                                     <i class="bi bi-bookmark-plus"></i>
                                  </div> 
                              </div>
                          </div>
                     </div>
-                </div>
             </div>';
     }
 }
@@ -315,7 +318,16 @@ function getCommentsForPost($postId){
                         JOIN users_meta i ON u.id = i.id_owner
                         WHERE c.id_post = ? 
                         ORDER BY c.date_created DESC", $postId);
-    $num = count($datos);
+                        if(isMultidimensional($datos)){
+                            $num = count($datos);
+                        }else{
+                            if($datos==null){
+                                $num = 0;
+                            }else{
+                                $num = 1;
+                            }
+                        }
+    
     array_unshift($datos,$num);
     return $datos;
 }

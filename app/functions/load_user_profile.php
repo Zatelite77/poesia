@@ -15,6 +15,16 @@ $user = getAutorInfo($userId);
                 <img src="<?php echo $userImg ?>" alt="user profile image">
                 <p><?php echo $user['first_name'] ?></p>
                 <p><?php echo $user['last_name'] ?></p>
+                <form id="form_imagen" action="functions/uploadImageProfile.php" method="post" enctype="multipart/form-data">
+                    <label for="imagen">Selecciona tu imagen de perfil:</label>
+                    <input type="file" name="imagen" id="imagen" accept="image/*" onchange="manejarCargaImagen(event)" required>
+                    <br>
+                    <div>
+                        <img id="image" src="" alt="Vista previa" style="max-width:100%;">
+                    </div>
+                    <br>
+                    <input type="submit" value="Subir Imagen">
+                </form>
             </div>
         </div>
         <div class="col col-lg-9 col-md-8">Columna Derecha</div>

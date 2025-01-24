@@ -405,11 +405,6 @@ function loadFolder(folderId) {
     xhr.send(`folderId=${folderId}`);
 }
 
-// // Limpiar el div si la página se refresca
-// window.addEventListener("beforeunload", function () {
-//     document.getElementById("reading_container").innerHTML = "";
-// });
-
 function addComment(event, postId) {
     event.preventDefault();
 
@@ -479,3 +474,26 @@ document.addEventListener('DOMContentLoaded', () => {
         xhr.send();
     });
 });
+
+// Función para manejar la carga de la imagen
+function manejarCargaImagen(event) {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+        // Obtener el elemento de imagen donde se mostrará la vista previa
+        var image = document.getElementById('image');
+        image.src = e.target.result;
+        
+        // Inicializar Cropper.js para recortar la imagen
+        var cropper = new Cropper(image, {
+            aspectRatio: 1, // Mantener aspecto cuadrado
+            viewMode: 1, // Modo de vista donde la imagen se ajusta al área de recorte
+            autoCropArea: 0.8, // Área de recorte inicial
+            responsive: true,
+            crop: function(event) {
+                // Puedes obtener los datos de recorte si lo necesitas
+                console.log(event.detail);
+            }
+        });
+    };
+    reader.readAsDataURL(event.target.files[0]); // Leer el archivo seleccionado
+}

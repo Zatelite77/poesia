@@ -31,6 +31,11 @@ if($postId){
     }else{
         $commentsIcon = '<i class="bi bi-chat-square-dots me-1"></i>';
     };
+    if($autor['meta_content']===''){
+        $autorImg = 'img/users/01_placeholder_user.png';
+    }else{
+        $autorImg = $autor['meta_content'];
+    }
     if($post){
         $content = nl2br(htmlspecialchars($post['content']));
         echo '<div class="m-p-cont rounded bg-light p-2">
@@ -39,7 +44,7 @@ if($postId){
                             <div class="d-flex justify-content-between" style="width:100%;">
                                 <div class="d-flex">    
                                     <div class="m-p-user-img rounded-circle me-2">
-                                        <img src="'.$autor['meta_content'].'"/>
+                                        <img src="'.$autorImg.'"/>
                                     </div>
                                     <div class="m-p-meta">
                                         <p class="m-p-user-name">'.$autor['first_name'].' '.$autor['last_name'].'</p>
@@ -47,7 +52,10 @@ if($postId){
                                     </div>
                                 </div>
                                 <div>
+                                    <img src="assets/img/SVG/CC.svg" style="width:20px;"/>
                                     <img src="assets/img/SVG/CC_BY.svg" style="width:20px;"/>
+                                    <img src="assets/img/SVG/CC_NC.svg" style="width:20px;"/>
+                                    <img src="assets/img/SVG/CC_ND.svg" style="width:20px;"/>
                                 </div>
                             </div>
                         </div>
@@ -69,7 +77,7 @@ if($postId){
                                     <span class="votes_quantity">'.$comments[0].'</span>
                                  </div> 
                                  <div class="d-flex me-2">
-                                     <i class="bi bi-heart"></i>
+                                     <i class="bi bi-bookmark-plus"></i>
                                  </div> 
                              </div>
                          </div>
@@ -91,11 +99,16 @@ if($postId){
                                     echo $mostrarTodos;
                                     // Si es un array multidimensional, recorremos cada comentario
                                     foreach ($comments as $comment) {
+                                        if($comment['meta_content']===''){
+                                            $autorCommentImg = 'img/users/01_placeholder_user.png';
+                                        }else{
+                                            $autorCommentImg = $comment['meta_content'];
+                                        }
                                         if (!empty($comment['content'])) { // Verificar si el comentario tiene contenido
                                             // $commentAutorImg = jrMysqli("SELECT meta_content FROM users_meta WHERE meta_type='1' && id_owner=?", $comment['id_owner']);
                                             // $commentAutorData = jrMysqli("SELECT * FROM users WHERE id=?", $comment['id_owner']);
                                             echo '<div class="comment-item d-flex justify-contents-between">
-                                                    <div class="me-2 wall-post-comments-user-img-box" style="background-image: url('.$comment['meta_content'].');width:35px;height:35px;background-size:cover;overflow:hidden;border-radius:18px;"></div>
+                                                    <div class="me-2 wall-post-comments-user-img-box" style="background-image: url('.$autorCommentImg.');width:35px;height:35px;background-size:cover;overflow:hidden;border-radius:18px;"></div>
                                                     <div>
                                                         <p><strong>'.$comment['first_name'].' '.$comment['last_name'].'</strong></p>
                                                         <p>'.$comment['content'].'</p>
@@ -104,13 +117,18 @@ if($postId){
                                         }
                                     }
                                 } else {
+                                    if($comments['meta_content']===''){
+                                        $autorCommentImg = 'img/users/01_placeholder_user.png';
+                                    }else{
+                                        $autorCommentImg = $comments['meta_content'];
+                                    }
                                     echo $mostrarTodos;
                                     // Si no es multidimensional, significa que hay solo un comentario
                                     if (!empty($comments['content'])) { // Verificar si el comentario tiene contenido
                                         // $commentAutorImg = jrMysqli("SELECT meta_content FROM users_meta WHERE meta_type='1' && id_owner=?", $comment['id_owner']);
                                         // $commentAutorData = jrMysqli("SELECT * FROM users WHERE id=?", $comment['id_user']);
                                         echo '<div class="comment-item d-flex justify-contents-between">
-                                                <div class="me-2 wall-post-comments-user-img-box" style="background-image: url('.$comments['meta_content'].');width:35px;height:35px;background-size:cover;overflow:hidden;border-radius:18px;"></div>
+                                                <div class="me-2 wall-post-comments-user-img-box" style="background-image: url('.$autorCommentImg.');width:35px;height:35px;background-size:cover;overflow:hidden;border-radius:18px;"></div>
                                                 <div>
                                                     <p><strong>'.$comments['first_name'].' '.$comments['last_name'].'</strong></p>
                                                     <p>'.$comments['content'].'</p>
