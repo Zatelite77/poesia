@@ -337,3 +337,37 @@ function getAutorInfo($id){
     $datos = jrMysqli("SELECT u.first_name, u.last_name, i.meta_content FROM users u JOIN users_meta i ON i.id_owner=u.id WHERE u.id=?", $id);
     return $datos;
 }
+
+function getPublishedPostsByUser($id){
+    // $conn = conn();
+    $datos = count(jrMysqli("SELECT * FROM posts WHERE id_owner=? AND status='p'", $id));
+    return $datos;
+}
+
+function getDraftPostsByUser($id){
+    // $conn = conn();
+    $datos = count(jrMysqli("SELECT * FROM posts WHERE id_owner=? AND status='d'", $id));
+    return $datos;
+}
+
+function getCommentsMadeByUser($id){
+    // $conn = conn();
+    $datos = jrMysqli("SELECT * FROM comments WHERE id_owner=?", $id);
+    return $datos;
+}
+
+function getCommentsReceivedByUser($id){
+    $conn = conn();
+    $comments = 0;
+    $posts = jrMysqli("SELECT * FROM posts WHERE id_owner=?", $id);
+    if(isMultidimensional($posts)){
+        foreach($posts as $post){
+            $postId = $post['id'];
+            $postComments = count(mysqli_query($conn, "SELECT * FROM comments WHERE id_post='$postId'"));
+            $comments = $comments+$postComments;
+        }
+    }else{
+        $comments = $comments+count($posts);
+    }
+    return $comments;
+}

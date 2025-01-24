@@ -324,6 +324,43 @@ a {
 
 /* --- PERFIL DE USUARIO ----- */
 
+.jr-uspfl-head-h3 {
+    font-size: 16px;
+    font-family:$fsans;
+    color:$black;
+    line-height:1em;
+}
+
+.jr-uspfl-actitem-box {
+    padding:0px;
+    background-color: $white;
+    width:100%;
+    border-radius: 4px;
+}
+
+.jr-uspfl-actitem-box-lft-cont {
+    width:auto;
+    padding: 5px;
+    background-color: $lgrey;
+}
+
+.jr-uspfl-actitem-lft-cont-txt {
+    font-family: $fsans;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.jr-uspfl-actitem-box-right-cont {
+    width:auto;
+    padding: 5px;
+    background-color: $white;
+}
+
+.jr-uspfl-actitem-box-right-cont-txt {
+    font-family: $fsans;
+    font-weight: 400;
+    font-size: 14px;
+}
 
 .jr-user-profile-img img{
     width:140px;

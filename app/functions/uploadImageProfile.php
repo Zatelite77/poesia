@@ -18,12 +18,14 @@ if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
         die('Formato de archivo no permitido');
     }
 
-    // Directorio donde se guardará la imagen
+    // Verificar si la carpeta existe, y si no, crearla
     $dir = "img/users/$userId/";
 
-    // Verificar si la carpeta del usuario existe, si no, crearla
     if (!file_exists($dir)) {
         mkdir($dir, 0777, true); // Crear la carpeta con permisos adecuados
+        echo "Carpeta creada: $dir"; // Para depuración
+    } else {
+        echo "La carpeta ya existe: $dir"; // Para depuración
     }
 
     // Comprobar si ya existe una imagen con el mismo nombre
@@ -33,15 +35,23 @@ if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
     // Si ya existe la imagen, renombrarla
     while (file_exists($dir . $newImageName)) {
         $newImageName = pathinfo($imgName, PATHINFO_FILENAME) . "_$counter." . $imgExt;
+        echo "Nombre de imagen final: $newImageName"; // Para depuración
         $counter++;
     }
 
     // Mover la imagen al directorio del usuario
-    $newImagePath = $dir . $newImageName;
-    move_uploaded_file($imgTmp, $newImagePath);
+    // $newImagePath = $dir . $newImageName;
+    $imagePathToMove = $_SERVER['DOCUMENT_ROOT'] . "/app/img/users/$userId/$newImageName";
+    $imagePathToDB = "img/users/".$userId."/".$newImageName;
+    // Verificar si el archivo temporal existe y moverlo
+    if (move_uploaded_file($imgTmp, $imagePathToMove)) {
+        echo "Archivo movido correctamente a: $imagePathToMove";
+    } else {
+        echo "Error al mover el archivo a: $imagePathToMove";
+    }
 
     // Optimización de la imagen (convertir a JPG y reducir tamaño)
-    optimize_image($newImagePath);
+    optimize_image($imagePathToMove);
     $conn = conn();
     // Verificar si ya existe un registro de tipo 1 para el usuario
     $stmt = $conn->prepare("SELECT * FROM users_meta WHERE id_owner = ? AND meta_type = 1");
@@ -52,11 +62,11 @@ if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
     if ($result->num_rows > 0) {
         // Si ya existe, actualizar el registro
         $stmt = $conn->prepare("UPDATE users_meta SET meta_content = ? WHERE id_owner = ? AND meta_type = 1");
-        $stmt->bind_param('ss', $newImagePath, $userId); // Usamos 'ss' para tratar ambos como string
+        $stmt->bind_param('ss', $imagePathToDB, $userId); // Usamos 'ss' para tratar ambos como string
     } else {
         // Si no existe, insertar un nuevo registro
         $stmt = $conn->prepare("INSERT INTO users_meta (id_owner, meta_type, meta_content) VALUES (?, 1, ?)");
-        $stmt->bind_param('ss', $userId, $newImagePath); // Usamos 'ss' para tratar ambos como string
+        $stmt->bind_param('ss', $userId, $imagePathToDB); // Usamos 'ss' para tratar ambos como string
     }
 
     $stmt->execute();
